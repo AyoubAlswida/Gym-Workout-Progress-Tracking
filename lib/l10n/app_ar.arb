@@ -10,6 +10,8 @@
   "helloAthlete": "أهلاً أيها البطل!",
   "workoutsThisWeek": "تمارين هذا الأسبوع",
   "latestWeight": "آخر وزن",
+  "streak": "سلسلة الالتزام",
+  "weekStreak": "{count, plural, =0{لا توجد سلسلة بعد} =1{سلسلة أسبوع واحد} =2{سلسلة أسبوعين} few{سلسلة {count} أسابيع} other{سلسلة {count} أسبوعاً}}",
   "startNewWorkout": "ابدأ تمريناً جديداً",
   "quickWorkout": "تمرين سريع",
 

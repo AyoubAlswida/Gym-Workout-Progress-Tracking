@@ -10,6 +10,13 @@
   "helloAthlete": "Hello, Athlete!",
   "workoutsThisWeek": "Workouts This Week",
   "latestWeight": "Latest Weight",
+  "streak": "Streak",
+  "weekStreak": "{count, plural, =0{No streak yet} =1{1-week streak} other{{count}-week streak}}",
+  "@weekStreak": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "startNewWorkout": "START NEW WORKOUT",
   "quickWorkout": "Quick Workout",
 

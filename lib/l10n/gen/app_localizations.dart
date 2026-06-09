@@ -146,6 +146,18 @@ abstract class AppLocalizations {
   /// **'Latest Weight'**
   String get latestWeight;
 
+  /// No description provided for @streak.
+  ///
+  /// In en, this message translates to:
+  /// **'Streak'**
+  String get streak;
+
+  /// No description provided for @weekStreak.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No streak yet} =1{1-week streak} other{{count}-week streak}}'**
+  String weekStreak(int count);
+
   /// No description provided for @startNewWorkout.
   ///
   /// In en, this message translates to:

@@ -33,6 +33,23 @@ class AppLocalizationsAr extends AppLocalizations {
   String get latestWeight => 'آخر وزن';
 
   @override
+  String get streak => 'سلسلة الالتزام';
+
+  @override
+  String weekStreak(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'سلسلة $count أسبوعاً',
+      few: 'سلسلة $count أسابيع',
+      two: 'سلسلة أسبوعين',
+      one: 'سلسلة أسبوع واحد',
+      zero: 'لا توجد سلسلة بعد',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get startNewWorkout => 'ابدأ تمريناً جديداً';
 
   @override

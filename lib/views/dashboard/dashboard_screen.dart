@@ -79,6 +79,12 @@ class DashboardScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               MetricCard(
+                title: l10n.streak,
+                value: l10n.weekStreak(workoutVM.weeklyStreak),
+                icon: Icons.local_fire_department,
+              ),
+              const SizedBox(height: 20),
+              MetricCard(
                 title: l10n.latestWeight,
                 value: profileVM.latestMeasurement != null
                     ? '${profileVM.latestMeasurement!.bodyWeight.toStringAsFixed(1)} '

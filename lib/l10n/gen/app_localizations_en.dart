@@ -33,6 +33,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get latestWeight => 'Latest Weight';
 
   @override
+  String get streak => 'Streak';
+
+  @override
+  String weekStreak(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count-week streak',
+      one: '1-week streak',
+      zero: 'No streak yet',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get startNewWorkout => 'START NEW WORKOUT';
 
   @override

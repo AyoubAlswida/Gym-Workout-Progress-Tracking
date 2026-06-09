@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../core/utils/streak_calculator.dart';
 import '../models/workout_session.dart';
 import '../repositories/workout_repository.dart';
 
@@ -20,6 +21,12 @@ class WorkoutViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+
+  /// Consecutive training weeks ending now — the dashboard streak card.
+  int get weeklyStreak => computeWeeklyStreak(
+        _sessions.map((s) => DateTime.parse(s.date)).toList(),
+        DateTime.now(),
+      );
 
   // Used for the bar chart showing completed workouts this week
   int get workoutsCompletedThisWeek {
