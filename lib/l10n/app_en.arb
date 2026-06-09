@@ -58,6 +58,21 @@
   },
   "kg": "kg",
   "lbs": "lbs",
+  "kmUnit": "km",
+  "miUnit": "mi",
+  "durationMinutesField": "Duration (min)",
+  "distanceField": "Distance ({unit})",
+  "@distanceField": {
+    "placeholders": {
+      "unit": {"type": "String"}
+    }
+  },
+  "lastTimeGeneric": "Last time: {value}",
+  "@lastTimeGeneric": {
+    "placeholders": {
+      "value": {"type": "String"}
+    }
+  },
 
   "newRoutine": "New Routine",
   "editRoutine": "Edit Routine",

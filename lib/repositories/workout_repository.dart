@@ -143,7 +143,7 @@ class WorkoutRepository {
       FROM workout_sets ws
       JOIN workout_sessions s ON ws.sessionId = s.id
       JOIN exercises e ON ws.exerciseId = e.id
-      WHERE ws.isCompleted = 1
+      WHERE ws.isCompleted = 1 AND e.category != 'Cardio'
       GROUP BY ws.exerciseId
       ORDER BY weight DESC
       ''',
@@ -151,13 +151,14 @@ class WorkoutRepository {
   }
 
   /// Exercises that have at least one completed set — the analytics dropdown.
+  /// Cardio is excluded: a 0 kg weight chart carries no signal.
   Future<List<Exercise>> getExercisesWithData() async {
     final db = await dbHelper.database;
     final maps = await db.rawQuery(
       '''
       SELECT DISTINCT e.* FROM exercises e
       JOIN workout_sets ws ON ws.exerciseId = e.id
-      WHERE ws.isCompleted = 1
+      WHERE ws.isCompleted = 1 AND e.category != 'Cardio'
       ORDER BY e.name ASC
       ''',
     );

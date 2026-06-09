@@ -91,6 +91,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lbs => 'lbs';
 
   @override
+  String get kmUnit => 'km';
+
+  @override
+  String get miUnit => 'mi';
+
+  @override
+  String get durationMinutesField => 'Duration (min)';
+
+  @override
+  String distanceField(String unit) {
+    return 'Distance ($unit)';
+  }
+
+  @override
+  String lastTimeGeneric(String value) {
+    return 'Last time: $value';
+  }
+
+  @override
   String get newRoutine => 'New Routine';
 
   @override

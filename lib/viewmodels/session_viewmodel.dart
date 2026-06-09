@@ -147,7 +147,8 @@ class SessionViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addSet(int exerciseId, double weight, int reps) async {
+  Future<void> addSet(int exerciseId, double weight, int reps,
+      {int? durationSeconds, double? distanceMeters}) async {
     if (_activeSession == null) return;
     final group = _exerciseGroups
         .where((g) => g.exercise.id == exerciseId)
@@ -159,17 +160,12 @@ class SessionViewModel extends ChangeNotifier {
       exerciseId: exerciseId,
       weight: weight,
       reps: reps,
+      durationSeconds: durationSeconds,
+      distanceMeters: distanceMeters,
     );
     int setId = await _repository.insertSet(newSet);
 
-    group.sets.add(WorkoutSet(
-      id: setId,
-      sessionId: newSet.sessionId,
-      exerciseId: newSet.exerciseId,
-      weight: newSet.weight,
-      reps: newSet.reps,
-      isCompleted: newSet.isCompleted,
-    ));
+    group.sets.add(newSet.copyWith(id: setId));
     notifyListeners();
   }
 
@@ -184,27 +180,24 @@ class SessionViewModel extends ChangeNotifier {
     final newStatus = !targetSet.isCompleted;
     await _repository.updateSetCompletion(targetSet.id!, newStatus);
 
-    group.sets[index] = WorkoutSet(
-      id: targetSet.id,
-      sessionId: targetSet.sessionId,
-      exerciseId: targetSet.exerciseId,
-      weight: targetSet.weight,
-      reps: targetSet.reps,
-      isCompleted: newStatus,
-    );
+    group.sets[index] = targetSet.copyWith(isCompleted: newStatus);
 
     if (newStatus) {
-      final previousMax = _maxWeights[targetSet.exerciseId];
-      if (previousMax != null && targetSet.weight > previousMax) {
-        _latestPr = PrEvent(
-          exerciseName: group.exercise.name,
-          weight: targetSet.weight,
-        );
-      }
-      // First-ever set becomes the silent baseline; heavier sets later in
-      // this same session can still trigger a PR.
-      if (previousMax == null || targetSet.weight > previousMax) {
-        _maxWeights[targetSet.exerciseId] = targetSet.weight;
+      // Weight PRs only make sense for strength work; cardio sets log
+      // duration/distance with weight 0.
+      if (group.exercise.category != 'Cardio') {
+        final previousMax = _maxWeights[targetSet.exerciseId];
+        if (previousMax != null && targetSet.weight > previousMax) {
+          _latestPr = PrEvent(
+            exerciseName: group.exercise.name,
+            weight: targetSet.weight,
+          );
+        }
+        // First-ever set becomes the silent baseline; heavier sets later in
+        // this same session can still trigger a PR.
+        if (previousMax == null || targetSet.weight > previousMax) {
+          _maxWeights[targetSet.exerciseId] = targetSet.weight;
+        }
       }
       startRestTimer(await _settingsRepository.getRestTimerSeconds());
     } else {

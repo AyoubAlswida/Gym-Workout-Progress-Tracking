@@ -242,6 +242,36 @@ abstract class AppLocalizations {
   /// **'lbs'**
   String get lbs;
 
+  /// No description provided for @kmUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'km'**
+  String get kmUnit;
+
+  /// No description provided for @miUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'mi'**
+  String get miUnit;
+
+  /// No description provided for @durationMinutesField.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (min)'**
+  String get durationMinutesField;
+
+  /// No description provided for @distanceField.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance ({unit})'**
+  String distanceField(String unit);
+
+  /// No description provided for @lastTimeGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time: {value}'**
+  String lastTimeGeneric(String value);
+
   /// No description provided for @newRoutine.
   ///
   /// In en, this message translates to:

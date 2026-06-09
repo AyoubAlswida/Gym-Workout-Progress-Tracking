@@ -27,6 +27,11 @@
   "newPr": "رقم قياسي جديد! {exercise}: {weight} {unit}",
   "kg": "كجم",
   "lbs": "رطل",
+  "kmUnit": "كم",
+  "miUnit": "ميل",
+  "durationMinutesField": "المدة (دقيقة)",
+  "distanceField": "المسافة ({unit})",
+  "lastTimeGeneric": "آخر مرة: {value}",
 
   "newRoutine": "روتين جديد",
   "editRoutine": "تعديل الروتين",

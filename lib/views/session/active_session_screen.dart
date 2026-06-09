@@ -92,6 +92,7 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                       key: ValueKey(group.exercise.id),
                       group: group,
                       unit: unit,
+                      isMetric: settingsVM.isMetric,
                     ),
                   ),
                   OutlinedButton.icon(
@@ -143,8 +144,14 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
 class _ExerciseGroupCard extends StatefulWidget {
   final SessionExerciseGroup group;
   final String unit;
+  final bool isMetric;
 
-  const _ExerciseGroupCard({super.key, required this.group, required this.unit});
+  const _ExerciseGroupCard({
+    super.key,
+    required this.group,
+    required this.unit,
+    required this.isMetric,
+  });
 
   @override
   State<_ExerciseGroupCard> createState() => _ExerciseGroupCardState();
@@ -153,11 +160,22 @@ class _ExerciseGroupCard extends StatefulWidget {
 class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
+  final _durationController = TextEditingController();
+  final _distanceController = TextEditingController();
+
+  bool get _isCardio => widget.group.exercise.category == 'Cardio';
+
+  static const _metersPerKm = 1000.0;
+  static const _metersPerMile = 1609.34;
+
+  double get _metersPerUnit => widget.isMetric ? _metersPerKm : _metersPerMile;
 
   @override
   void dispose() {
     _weightController.dispose();
     _repsController.dispose();
+    _durationController.dispose();
+    _distanceController.dispose();
     super.dispose();
   }
 
@@ -165,6 +183,23 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
       weight == weight.roundToDouble()
           ? weight.toStringAsFixed(0)
           : weight.toStringAsFixed(1);
+
+  String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final secs = (seconds % 60).toString().padLeft(2, '0');
+    return hours > 0 ? '$hours:$minutes:$secs' : '$minutes:$secs';
+  }
+
+  /// e.g. "12:30 — 2.5 km", or just "12:30" when no distance was logged.
+  String _cardioSummary(WorkoutSet set, AppLocalizations l10n) {
+    final duration = _formatDuration(set.durationSeconds ?? 0);
+    final meters = set.distanceMeters;
+    if (meters == null || meters <= 0) return duration;
+    final distance = (meters / _metersPerUnit).toStringAsFixed(2);
+    final distUnit = widget.isMetric ? l10n.kmUnit : l10n.miUnit;
+    return '$duration — $distance $distUnit';
+  }
 
   Future<void> _toggleSet(BuildContext context, WorkoutSet set) async {
     final sessionVM = context.read<SessionViewModel>();
@@ -219,8 +254,10 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  l10n.lastTime(
-                      _formatWeight(lastSet.weight), widget.unit, lastSet.reps),
+                  _isCardio
+                      ? l10n.lastTimeGeneric(_cardioSummary(lastSet, l10n))
+                      : l10n.lastTime(_formatWeight(lastSet.weight),
+                          widget.unit, lastSet.reps),
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 13),
@@ -244,8 +281,10 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                         style: Theme.of(context).textTheme.bodyLarge),
                     const Spacer(),
                     Text(
-                      l10n.setSummary(
-                          _formatWeight(set.weight), widget.unit, set.reps),
+                      _isCardio
+                          ? _cardioSummary(set, l10n)
+                          : l10n.setSummary(_formatWeight(set.weight),
+                              widget.unit, set.reps),
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     IconButton(
@@ -266,46 +305,95 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
             }),
             Row(
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: _weightController,
-                    decoration: InputDecoration(
-                      labelText: l10n.weight,
-                      isDense: true,
-                      border: const OutlineInputBorder(),
-                      hintText: lastSet != null
-                          ? _formatWeight(lastSet.weight)
-                          : null,
+                if (_isCardio) ...[
+                  Expanded(
+                    child: TextField(
+                      controller: _durationController,
+                      decoration: InputDecoration(
+                        labelText: l10n.durationMinutesField,
+                        isDense: true,
+                        border: const OutlineInputBorder(),
+                      ),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                     ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    controller: _repsController,
-                    decoration: InputDecoration(
-                      labelText: l10n.reps,
-                      isDense: true,
-                      border: const OutlineInputBorder(),
-                      hintText: lastSet?.reps.toString(),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _distanceController,
+                      decoration: InputDecoration(
+                        labelText: l10n.distanceField(
+                            widget.isMetric ? l10n.kmUnit : l10n.miUnit),
+                        isDense: true,
+                        border: const OutlineInputBorder(),
+                      ),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                     ),
-                    keyboardType: TextInputType.number,
                   ),
-                ),
+                ] else ...[
+                  Expanded(
+                    child: TextField(
+                      controller: _weightController,
+                      decoration: InputDecoration(
+                        labelText: l10n.weight,
+                        isDense: true,
+                        border: const OutlineInputBorder(),
+                        hintText: lastSet != null
+                            ? _formatWeight(lastSet.weight)
+                            : null,
+                      ),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: TextField(
+                      controller: _repsController,
+                      decoration: InputDecoration(
+                        labelText: l10n.reps,
+                        isDense: true,
+                        border: const OutlineInputBorder(),
+                        hintText: lastSet?.reps.toString(),
+                      ),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
                 const SizedBox(width: 8),
                 IconButton.filled(
                   style: IconButton.styleFrom(
                     backgroundColor: AppTheme.primary,
                   ),
                   onPressed: () {
-                    final weight =
-                        double.tryParse(_weightController.text) ?? 0.0;
-                    final reps = int.tryParse(_repsController.text) ?? 0;
-                    if (weight > 0 && reps > 0) {
-                      sessionVM.addSet(group.exercise.id!, weight, reps);
-                      _repsController.clear();
+                    if (_isCardio) {
+                      final minutes =
+                          double.tryParse(_durationController.text) ?? 0.0;
+                      final distance =
+                          double.tryParse(_distanceController.text);
+                      if (minutes > 0) {
+                        sessionVM.addSet(
+                          group.exercise.id!,
+                          0,
+                          0,
+                          durationSeconds: (minutes * 60).round(),
+                          distanceMeters: (distance != null && distance > 0)
+                              ? distance * _metersPerUnit
+                              : null,
+                        );
+                        _durationController.clear();
+                        _distanceController.clear();
+                      }
+                    } else {
+                      final weight =
+                          double.tryParse(_weightController.text) ?? 0.0;
+                      final reps = int.tryParse(_repsController.text) ?? 0;
+                      if (weight > 0 && reps > 0) {
+                        sessionVM.addSet(group.exercise.id!, weight, reps);
+                        _repsController.clear();
+                      }
                     }
                   },
                   icon: const Icon(Icons.add, color: Colors.white),

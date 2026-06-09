@@ -133,6 +133,69 @@ void main() {
     );
   });
 
+  test('cardio set persists duration and distance', () async {
+    await viewModel.initSession('Quick Workout');
+    final running = (await repository.getExercises())
+        .firstWhere((e) => e.name == 'Running (Treadmill)');
+    await viewModel.addExercise(running);
+
+    await viewModel.addSet(running.id!, 0, 0,
+        durationSeconds: 1800, distanceMeters: 5000);
+
+    final set = viewModel.exerciseGroups[0].sets[0];
+    expect(set.durationSeconds, 1800);
+    expect(set.distanceMeters, 5000);
+
+    // Round-trips through the database too.
+    final stored =
+        await repository.getSetsForSession(viewModel.activeSession!.id!);
+    expect(stored.single.durationSeconds, 1800);
+    expect(stored.single.distanceMeters, 5000);
+  });
+
+  test('completing a cardio set never fires a PR', () async {
+    final running = (await repository.getExercises())
+        .firstWhere((e) => e.name == 'Running (Treadmill)');
+    // Even with cardio history, completion stays silent.
+    final oldId = await repository.insertSession(WorkoutSession(
+        date: '2026-05-01T10:00:00.000', duration: 0, routineName: 'Old'));
+    final oldSet = await repository.insertSet(WorkoutSet(
+        sessionId: oldId,
+        exerciseId: running.id!,
+        weight: 0,
+        reps: 0,
+        durationSeconds: 600));
+    await repository.updateSetCompletion(oldSet, true);
+
+    await viewModel.initSession('Quick Workout');
+    await viewModel.addExercise(running);
+    await viewModel.addSet(running.id!, 0, 0, durationSeconds: 1200);
+    await viewModel.toggleSetCompletion(viewModel.exerciseGroups[0].sets[0]);
+
+    expect(viewModel.consumeLatestPr(), isNull);
+    viewModel.stopRestTimer();
+  });
+
+  test('mixed strength and cardio session finishes correctly', () async {
+    await viewModel.initSession('Quick Workout');
+    final sessionId = viewModel.activeSession!.id!;
+    final bench = await benchPress();
+    final running = (await repository.getExercises())
+        .firstWhere((e) => e.name == 'Running (Treadmill)');
+
+    await viewModel.addExercise(bench);
+    await viewModel.addExercise(running);
+    await viewModel.addSet(bench.id!, 80, 8);
+    await viewModel.addSet(running.id!, 0, 0,
+        durationSeconds: 900, distanceMeters: 2500);
+
+    await viewModel.finishSession();
+
+    final stored = await repository.getSetsForSession(sessionId);
+    expect(stored.length, 2);
+    expect(stored.where((s) => s.durationSeconds != null).length, 1);
+  });
+
   test('lastPerformance hint loads previous completed set', () async {
     final bench = await benchPress();
     final oldId = await repository.insertSession(WorkoutSession(
