@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../viewmodels/profile_viewmodel.dart';
 import '../../core/theme/app_theme.dart';
+import '../../l10n/gen/app_localizations.dart';
+import '../../viewmodels/profile_viewmodel.dart';
+import '../../viewmodels/settings_viewmodel.dart';
+import '../exercises/exercise_library_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final profileVM = context.watch<ProfileViewModel>();
+    final settingsVM = context.watch<SettingsViewModel>();
+    final l10n = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings & Profile'),
+        title: Text(l10n.settingsProfile),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -23,19 +27,24 @@ class ProfileScreen extends StatelessWidget {
             child: Icon(Icons.person, size: 50, color: AppTheme.textLight),
           ),
           const SizedBox(height: 20),
-          const Center(
-            child: Text('Athlete Name', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          Center(
+            child: Text(
+              l10n.athlete,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
           ),
           const SizedBox(height: 40),
           Card(
             child: ListTile(
-              title: const Text('Measurement Unit'),
-              subtitle: Text(profileVM.isMetric ? 'Metric (KG/CM)' : 'Imperial (LBS/IN)'),
-              trailing: Switch(
-                value: profileVM.isMetric,
-                activeThumbColor: AppTheme.primary,
-                onChanged: (val) {
-                  profileVM.toggleUnits();
+              title: Text(l10n.language),
+              trailing: SegmentedButton<String>(
+                segments: const [
+                  ButtonSegment(value: 'en', label: Text('EN')),
+                  ButtonSegment(value: 'ar', label: Text('ع')),
+                ],
+                selected: {settingsVM.locale.languageCode},
+                onSelectionChanged: (selection) {
+                  settingsVM.setLocale(selection.first);
                 },
               ),
             ),
@@ -43,18 +52,144 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Card(
             child: ListTile(
-              title: const Text('Log New Measurement'),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              title: Text(l10n.measurementUnit),
+              subtitle: Text(
+                  settingsVM.isMetric ? l10n.metricUnits : l10n.imperialUnits),
+              trailing: Switch(
+                value: settingsVM.isMetric,
+                activeThumbColor: AppTheme.primary,
+                onChanged: (val) {
+                  settingsVM.toggleUnits();
+                },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.restTimerDuration,
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [30, 60, 90, 120, 180].map((seconds) {
+                      return ChoiceChip(
+                        label: Text(l10n.secondsValue(seconds)),
+                        selected: settingsVM.restTimerSeconds == seconds,
+                        selectedColor: AppTheme.primary.withValues(alpha: 0.3),
+                        onSelected: (_) {
+                          settingsVM.setRestTimerSeconds(seconds);
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.fitness_center, color: AppTheme.primary),
+              title: Text(l10n.exerciseLibrary),
+              trailing: const Icon(Icons.chevron_right, size: 20),
               onTap: () {
-                profileVM.addMeasurement(74.5, 14.8);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Measurement logged securely offline!')),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ExerciseLibraryScreen(),
+                  ),
                 );
               },
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.monitor_weight_outlined,
+                  color: AppTheme.primary),
+              title: Text(l10n.logNewMeasurement),
+              trailing: const Icon(Icons.chevron_right, size: 20),
+              onTap: () => _showMeasurementDialog(context),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _showMeasurementDialog(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final profileVM = context.read<ProfileViewModel>();
+    final weightController = TextEditingController();
+    final bodyFatController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(l10n.logNewMeasurement),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: weightController,
+                  autofocus: true,
+                  decoration: InputDecoration(labelText: l10n.bodyWeightField),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (value) =>
+                      double.tryParse(value ?? '') == null
+                          ? l10n.invalidNumber
+                          : null,
+                ),
+                TextFormField(
+                  controller: bodyFatController,
+                  decoration: InputDecoration(labelText: l10n.bodyFatField),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  validator: (value) =>
+                      double.tryParse(value ?? '') == null
+                          ? l10n.invalidNumber
+                          : null,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (formKey.currentState!.validate()) {
+                  Navigator.of(dialogContext).pop(true);
+                }
+              },
+              child: Text(l10n.save),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (saved == true) {
+      await profileVM.addMeasurement(
+        double.parse(weightController.text),
+        double.parse(bodyFatController.text),
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.measurementLogged)),
+        );
+      }
+    }
   }
 }

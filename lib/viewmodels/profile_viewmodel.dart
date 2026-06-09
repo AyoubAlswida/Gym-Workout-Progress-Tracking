@@ -11,9 +11,6 @@ class ProfileViewModel extends ChangeNotifier {
   List<BodyMeasurement> _measurements = [];
   List<BodyMeasurement> get measurements => _measurements;
 
-  bool _isMetric = true; // true = KG, false = LBS
-  bool get isMetric => _isMetric;
-
   Future<void> loadMeasurements() async {
     _measurements = await _repository.getMeasurements();
     _latestMeasurement = await _repository.getLatestMeasurement();
@@ -28,10 +25,5 @@ class ProfileViewModel extends ChangeNotifier {
     );
     await _repository.insertMeasurement(newMeasurement);
     await loadMeasurements();
-  }
-
-  void toggleUnits() {
-    _isMetric = !_isMetric;
-    notifyListeners();
   }
 }

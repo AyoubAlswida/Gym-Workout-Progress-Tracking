@@ -1,0 +1,190 @@
+{
+  "@@locale": "en",
+  "appTitle": "Gym Tracker",
+
+  "navHome": "Home",
+  "navRoutines": "Routines",
+  "navAnalytics": "Analytics",
+  "navProfile": "Profile",
+
+  "helloAthlete": "Hello, Athlete!",
+  "workoutsThisWeek": "Workouts This Week",
+  "latestWeight": "Latest Weight",
+  "startNewWorkout": "START NEW WORKOUT",
+  "quickWorkout": "Quick Workout",
+
+  "workout": "Workout",
+  "restLabel": "Rest: {seconds}s",
+  "@restLabel": {
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "setNumber": "Set {number}",
+  "@setNumber": {
+    "placeholders": {
+      "number": {"type": "int"}
+    }
+  },
+  "setSummary": "{weight} {unit} x {reps} reps",
+  "@setSummary": {
+    "placeholders": {
+      "weight": {"type": "String"},
+      "unit": {"type": "String"},
+      "reps": {"type": "int"}
+    }
+  },
+  "weight": "Weight",
+  "reps": "Reps",
+  "addExercise": "Add Exercise",
+  "finishWorkout": "Finish Workout",
+  "sessionNotes": "Session Notes",
+  "sessionNotesHint": "How did the workout feel?",
+  "lastTime": "Last time: {weight} {unit} x {reps}",
+  "@lastTime": {
+    "placeholders": {
+      "weight": {"type": "String"},
+      "unit": {"type": "String"},
+      "reps": {"type": "int"}
+    }
+  },
+  "newPr": "New PR! {exercise}: {weight} {unit}",
+  "@newPr": {
+    "placeholders": {
+      "exercise": {"type": "String"},
+      "weight": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "kg": "kg",
+  "lbs": "lbs",
+
+  "newRoutine": "New Routine",
+  "editRoutine": "Edit Routine",
+  "routineName": "Routine Name",
+  "deleteRoutine": "Delete Routine",
+  "deleteRoutineConfirm": "Delete \"{name}\"? This cannot be undone.",
+  "@deleteRoutineConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "exercisesCount": "{count, plural, =0{No exercises} =1{1 exercise} other{{count} exercises}}",
+  "@exercisesCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "targetSetsReps": "{sets} x {reps}",
+  "@targetSetsReps": {
+    "placeholders": {
+      "sets": {"type": "int"},
+      "reps": {"type": "int"}
+    }
+  },
+  "presetBadge": "Preset",
+  "noRoutinesYet": "No routines yet. Tap + to create one.",
+  "routineNeedsNameAndExercise": "Add a name and at least one exercise.",
+
+  "exerciseLibrary": "Exercise Library",
+  "searchExercises": "Search exercises...",
+  "allMuscleGroups": "All",
+  "newExercise": "New Exercise",
+  "editExercise": "Edit Exercise",
+  "exerciseName": "Exercise Name",
+  "category": "Category",
+  "muscleGroup": "Muscle Group",
+  "equipment": "Equipment",
+  "customBadge": "Custom",
+  "deleteExercise": "Delete Exercise",
+  "deleteExerciseConfirm": "Delete \"{name}\"?",
+  "@deleteExerciseConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "exerciseInUse": "This exercise is used in workouts or routines and cannot be deleted.",
+  "fieldRequired": "This field is required",
+  "noExercisesFound": "No exercises found",
+
+  "strengthProgress": "Strength Progress",
+  "maxWeight": "Max Weight",
+  "estimated1Rm": "Est. 1RM",
+  "weeklyVolume": "Weekly Volume",
+  "bodyWeightChart": "Body Weight",
+  "personalRecords": "Personal Records",
+  "measurementHistory": "Measurement History",
+  "noDataYet": "No data yet",
+  "weightEntry": "Weight: {weight} {unit}",
+  "@weightEntry": {
+    "placeholders": {
+      "weight": {"type": "String"},
+      "unit": {"type": "String"}
+    }
+  },
+  "bodyFatEntry": "Body Fat: {percent}%",
+  "@bodyFatEntry": {
+    "placeholders": {
+      "percent": {"type": "String"}
+    }
+  },
+
+  "settingsProfile": "Settings & Profile",
+  "athlete": "Athlete",
+  "measurementUnit": "Measurement Unit",
+  "metricUnits": "Metric (KG/CM)",
+  "imperialUnits": "Imperial (LBS/IN)",
+  "language": "Language",
+  "restTimerDuration": "Rest Timer",
+  "secondsValue": "{seconds}s",
+  "@secondsValue": {
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "logNewMeasurement": "Log New Measurement",
+  "bodyWeightField": "Body Weight",
+  "bodyFatField": "Body Fat %",
+  "measurementLogged": "Measurement logged!",
+  "invalidNumber": "Enter a valid number",
+
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add",
+
+  "catChest": "Chest",
+  "catBack": "Back",
+  "catLegs": "Legs",
+  "catShoulders": "Shoulders",
+  "catArms": "Arms",
+  "catCore": "Core",
+  "catCardio": "Cardio",
+  "catOther": "Other",
+
+  "muscleChest": "Chest",
+  "muscleBack": "Back",
+  "muscleQuads": "Quads",
+  "muscleHamstrings": "Hamstrings",
+  "muscleGlutes": "Glutes",
+  "muscleCalves": "Calves",
+  "muscleShoulders": "Shoulders",
+  "muscleTraps": "Traps",
+  "muscleBiceps": "Biceps",
+  "muscleTriceps": "Triceps",
+  "muscleCore": "Core",
+  "muscleOther": "Other",
+
+  "equipBarbell": "Barbell",
+  "equipDumbbell": "Dumbbell",
+  "equipCable": "Cable",
+  "equipMachine": "Machine",
+  "equipBodyweight": "Bodyweight",
+  "equipOther": "Other",
+
+  "routinePushDay": "Push Day",
+  "routinePullDay": "Pull Day",
+  "routineLegs": "Legs",
+  "routineFullBody": "Full Body"
+}

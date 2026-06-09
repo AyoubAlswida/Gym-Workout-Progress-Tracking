@@ -3,12 +3,14 @@ class WorkoutSession {
   final String date;
   final int duration; // in seconds
   final String routineName;
+  final String? notes;
 
   WorkoutSession({
     this.id,
     required this.date,
     required this.duration,
     required this.routineName,
+    this.notes,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +19,7 @@ class WorkoutSession {
       'date': date,
       'duration': duration,
       'routineName': routineName,
+      'notes': notes,
     };
   }
 
@@ -26,6 +29,7 @@ class WorkoutSession {
       date: map['date'],
       duration: map['duration'],
       routineName: map['routineName'],
+      notes: map['notes'],
     );
   }
 }

@@ -5,6 +5,8 @@ import 'routines/routines_screen.dart';
 import 'analytics/analytics_screen.dart';
 import 'profile/profile_screen.dart';
 import 'session/active_session_screen.dart';
+import '../l10n/gen/app_localizations.dart';
+import '../viewmodels/analytics_viewmodel.dart';
 import '../viewmodels/session_viewmodel.dart';
 
 class MainNavigation extends StatefulWidget {
@@ -27,7 +29,8 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final sessionViewModel = context.watch<SessionViewModel>();
-    
+    final l10n = AppLocalizations.of(context);
+
     if (sessionViewModel.activeSession != null) {
       return const ActiveSessionScreen();
     }
@@ -40,15 +43,24 @@ class _MainNavigationState extends State<MainNavigation> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
+          if (index == 2) {
+            // Analytics lives in an IndexedStack and won't rebuild on tab
+            // switch; refresh so freshly finished sessions show up.
+            context.read<AnalyticsViewModel>().load();
+          }
           setState(() {
             _currentIndex = index;
           });
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list_alt), label: 'Routines'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Analytics'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        items: [
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.dashboard), label: l10n.navHome),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.list_alt), label: l10n.navRoutines),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.bar_chart), label: l10n.navAnalytics),
+          BottomNavigationBarItem(
+              icon: const Icon(Icons.person), label: l10n.navProfile),
         ],
       ),
     );

@@ -18,7 +18,7 @@ class MetricCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppTheme.primary.withOpacity(0.2),
+                color: AppTheme.primary.withValues(alpha: 0.2),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: AppTheme.primary, size: 28),
