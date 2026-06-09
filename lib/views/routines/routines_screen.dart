@@ -40,7 +40,9 @@ class RoutinesScreen extends StatelessWidget {
                     subtitle: Text(
                       l10n.exercisesCount(
                           routineVM.exerciseCountFor(routine.id!)),
-                      style: const TextStyle(color: AppTheme.textLight),
+                      style: TextStyle(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
                     onTap: () => _openEditor(context, routine),
                     trailing: Row(

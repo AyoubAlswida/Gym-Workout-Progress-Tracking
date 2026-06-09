@@ -165,8 +165,10 @@ class _RoutineEditorScreenState extends State<RoutineEditorScreen> {
                       ),
                       trailing: ReorderableDragStartListener(
                         index: index,
-                        child: const Icon(Icons.drag_handle,
-                            color: AppTheme.textLight),
+                        child: Icon(Icons.drag_handle,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant),
                       ),
                     ),
                   ),

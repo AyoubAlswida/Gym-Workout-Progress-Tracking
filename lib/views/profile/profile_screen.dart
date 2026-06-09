@@ -21,10 +21,12 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 50,
-            backgroundColor: AppTheme.dividerColor,
-            child: Icon(Icons.person, size: 50, color: AppTheme.textLight),
+            backgroundColor: Theme.of(context).dividerColor,
+            child: Icon(Icons.person,
+                size: 50,
+                color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
           const SizedBox(height: 20),
           Center(
@@ -46,6 +48,35 @@ class ProfileScreen extends StatelessWidget {
                 onSelectionChanged: (selection) {
                   settingsVM.setLocale(selection.first);
                 },
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.theme,
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  SegmentedButton<ThemeMode>(
+                    segments: [
+                      ButtonSegment(
+                          value: ThemeMode.system,
+                          label: Text(l10n.themeSystem)),
+                      ButtonSegment(
+                          value: ThemeMode.light, label: Text(l10n.themeLight)),
+                      ButtonSegment(
+                          value: ThemeMode.dark, label: Text(l10n.themeDark)),
+                    ],
+                    selected: {settingsVM.themeMode},
+                    onSelectionChanged: (selection) {
+                      settingsVM.setThemeMode(selection.first);
+                    },
+                  ),
+                ],
               ),
             ),
           ),

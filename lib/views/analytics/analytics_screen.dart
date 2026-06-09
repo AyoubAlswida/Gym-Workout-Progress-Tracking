@@ -134,7 +134,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       subtitle: Text(l10n.setSummary(
                           _formatWeight(pr.weight), unit, pr.reps)),
                       trailing: Text(dateFormat.format(pr.date),
-                          style: const TextStyle(color: AppTheme.textLight)),
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurfaceVariant)),
                     ),
                   ),
                 ),
@@ -166,7 +169,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           m.bodyFatPercentage.toStringAsFixed(1))),
                       trailing: Text(
                         dateFormat.format(DateTime.parse(m.date)),
-                        style: const TextStyle(color: AppTheme.textLight),
+                        style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant),
                       ),
                     ),
                   ),
@@ -194,13 +200,14 @@ class _EmptyChart extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: AppTheme.cardColor,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppTheme.dividerColor),
+        border: Border.all(color: Theme.of(context).dividerColor),
       ),
       child: Center(
         child: Text(message,
-            style: const TextStyle(color: AppTheme.textLight)),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
       ),
     );
   }
@@ -257,8 +264,11 @@ class _ProgressChart extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 6),
                       child: Text(
                         dateFormat.format(points[index].date),
-                        style: const TextStyle(
-                            fontSize: 10, color: AppTheme.textLight),
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant),
                       ),
                     );
                   },
@@ -322,8 +332,11 @@ class _VolumeChart extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 6),
                       child: Text(
                         dateFormat.format(points[index].weekStart),
-                        style: const TextStyle(
-                            fontSize: 9, color: AppTheme.textLight),
+                        style: TextStyle(
+                            fontSize: 9,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurfaceVariant),
                       ),
                     );
                   },
@@ -388,7 +401,7 @@ class _BodyWeightChart extends StatelessWidget {
               LineChartBarData(
                 spots: spots,
                 isCurved: true,
-                color: AppTheme.textMain,
+                color: Theme.of(context).colorScheme.onSurface,
                 barWidth: 3,
                 dotData: const FlDotData(show: true),
               ),

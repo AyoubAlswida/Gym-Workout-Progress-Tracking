@@ -59,7 +59,7 @@ class DashboardScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   color: isToday
                                       ? AppTheme.primary
-                                      : AppTheme.dividerColor,
+                                      : Theme.of(context).dividerColor,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),

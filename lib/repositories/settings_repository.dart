@@ -4,6 +4,7 @@ class SettingsRepository {
   static const _keyIsMetric = 'isMetric';
   static const _keyRestTimerSeconds = 'restTimerSeconds';
   static const _keyLocaleCode = 'localeCode';
+  static const _keyThemeMode = 'themeMode';
 
   Future<bool> getIsMetric() async {
     final prefs = await SharedPreferences.getInstance();
@@ -33,5 +34,16 @@ class SettingsRepository {
   Future<void> setLocaleCode(String value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyLocaleCode, value);
+  }
+
+  /// One of 'system', 'light', 'dark'.
+  Future<String> getThemeMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyThemeMode) ?? 'system';
+  }
+
+  Future<void> setThemeMode(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyThemeMode, value);
   }
 }

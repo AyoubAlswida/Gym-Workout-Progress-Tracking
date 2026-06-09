@@ -78,7 +78,10 @@ class ExerciseLibraryScreen extends StatelessWidget {
                           subtitle: Text(
                             '${localizedMuscleGroup(l10n, exercise.muscleGroup)}'
                             ' · ${localizedEquipment(l10n, exercise.equipment)}',
-                            style: const TextStyle(color: AppTheme.textLight),
+                            style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant),
                           ),
                           trailing: exercise.isCustom
                               ? Chip(

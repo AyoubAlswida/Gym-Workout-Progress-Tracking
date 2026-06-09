@@ -16,10 +16,14 @@ class SettingsViewModel extends ChangeNotifier {
   Locale _locale = const Locale('en');
   Locale get locale => _locale;
 
+  ThemeMode _themeMode = ThemeMode.system;
+  ThemeMode get themeMode => _themeMode;
+
   Future<void> load() async {
     _isMetric = await _repository.getIsMetric();
     _restTimerSeconds = await _repository.getRestTimerSeconds();
     _locale = Locale(await _repository.getLocaleCode());
+    _themeMode = _themeModeFromString(await _repository.getThemeMode());
     notifyListeners();
   }
 
@@ -39,5 +43,33 @@ class SettingsViewModel extends ChangeNotifier {
     _locale = Locale(code);
     notifyListeners();
     await _repository.setLocaleCode(code);
+  }
+
+  Future<void> setThemeMode(ThemeMode mode) async {
+    _themeMode = mode;
+    notifyListeners();
+    await _repository.setThemeMode(_themeModeToString(mode));
+  }
+
+  static ThemeMode _themeModeFromString(String value) {
+    switch (value) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      default:
+        return ThemeMode.system;
+    }
+  }
+
+  static String _themeModeToString(ThemeMode mode) {
+    switch (mode) {
+      case ThemeMode.light:
+        return 'light';
+      case ThemeMode.dark:
+        return 'dark';
+      case ThemeMode.system:
+        return 'system';
+    }
   }
 }

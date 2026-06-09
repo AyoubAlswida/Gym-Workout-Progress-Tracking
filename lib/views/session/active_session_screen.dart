@@ -48,9 +48,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
     final routineName = sessionVM.activeSession?.routineName;
 
     return Scaffold(
-      backgroundColor: AppTheme.cardColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: AppTheme.cardColor,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => _finish(context),
@@ -71,7 +71,9 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                   ? l10n.restLabel(sessionVM.restSecondsRemaining)
                   : _formatElapsed(sessionVM.elapsedSeconds),
               style: TextStyle(
-                color: sessionVM.isResting ? Colors.red : AppTheme.textLight,
+                color: sessionVM.isResting
+                    ? Colors.red
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 14,
               ),
             ),
@@ -125,7 +127,8 @@ class _ActiveSessionScreenState extends State<ActiveSessionScreen> {
                 onPressed: () => _finish(context),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: AppTheme.textMain,
+                  backgroundColor: Theme.of(context).colorScheme.onSurface,
+                  foregroundColor: Theme.of(context).colorScheme.surface,
                 ),
                 child: Text(l10n.finishWorkout),
               ),
@@ -207,7 +210,8 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                 if (group.targetSets != null && group.targetReps != null)
                   Text(
                     l10n.targetSetsReps(group.targetSets!, group.targetReps!),
-                    style: const TextStyle(color: AppTheme.textLight),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
               ],
             ),
@@ -217,8 +221,9 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                 child: Text(
                   l10n.lastTime(
                       _formatWeight(lastSet.weight), widget.unit, lastSet.reps),
-                  style: const TextStyle(
-                      color: AppTheme.textLight, fontSize: 13),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: 13),
                 ),
               ),
             const SizedBox(height: 8),
@@ -250,7 +255,7 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                             : Icons.circle_outlined,
                         color: set.isCompleted
                             ? AppTheme.primary
-                            : AppTheme.textLight,
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
                         size: 28,
                       ),
                       onPressed: () => _toggleSet(context, set),

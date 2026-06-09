@@ -1,23 +1,72 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color background = Color(0xFFF9F9F9); // Off-White (Smoke White)
-  static const Color primary = Color(0xFF9DC183); // Sage Green (Pastel)
-  static const Color cardColor = Color(0xFFFFFFFF); // White for floating cards
-  static const Color textMain = Color(0xFF333333); // Charcoal (Dark Gray)
-  static const Color textLight = Color(0xFF888888); // Light Gray for subtitles
-  static const Color dividerColor = Color(0xFFEEEEEE); // Very Light Gray
+  // Light palette
+  static const Color _lightBackground = Color(0xFFF9F9F9); // Off-White
+  static const Color _lightCard = Color(0xFFFFFFFF);
+  static const Color _lightTextMain = Color(0xFF333333); // Charcoal
+  static const Color _lightTextLight = Color(0xFF888888);
+  static const Color _lightDivider = Color(0xFFEEEEEE);
 
-  static ThemeData get lightTheme {
+  // Dark palette
+  static const Color _darkBackground = Color(0xFF121212);
+  static const Color _darkCard = Color(0xFF1E1E1E);
+  static const Color _darkTextMain = Color(0xFFEDEDED);
+  static const Color _darkTextLight = Color(0xFF9E9E9E);
+  static const Color _darkDivider = Color(0xFF2A2A2A);
+
+  // Sage green works on both light and dark backgrounds.
+  static const Color primary = Color(0xFF9DC183);
+
+  static ThemeData get lightTheme => _buildTheme(
+        brightness: Brightness.light,
+        background: _lightBackground,
+        card: _lightCard,
+        textMain: _lightTextMain,
+        textLight: _lightTextLight,
+        divider: _lightDivider,
+      );
+
+  static ThemeData get darkTheme => _buildTheme(
+        brightness: Brightness.dark,
+        background: _darkBackground,
+        card: _darkCard,
+        textMain: _darkTextMain,
+        textLight: _darkTextLight,
+        divider: _darkDivider,
+      );
+
+  static ThemeData _buildTheme({
+    required Brightness brightness,
+    required Color background,
+    required Color card,
+    required Color textMain,
+    required Color textLight,
+    required Color divider,
+  }) {
+    final colorScheme = brightness == Brightness.light
+        ? ColorScheme.light(
+            primary: primary,
+            secondary: primary,
+            surface: card,
+            onSurface: textMain,
+            onSurfaceVariant: textLight,
+          )
+        : ColorScheme.dark(
+            primary: primary,
+            secondary: primary,
+            surface: card,
+            onSurface: textMain,
+            onSurfaceVariant: textLight,
+          );
     return ThemeData(
+      brightness: brightness,
       scaffoldBackgroundColor: background,
       primaryColor: primary,
-      colorScheme: const ColorScheme.light(
-        primary: primary,
-        secondary: primary,
-        surface: cardColor,
-      ),
-      appBarTheme: const AppBarTheme(
+      colorScheme: colorScheme,
+      dividerColor: divider,
+      dividerTheme: DividerThemeData(color: divider),
+      appBarTheme: AppBarTheme(
         backgroundColor: background,
         elevation: 0,
         centerTitle: false,
@@ -28,7 +77,7 @@ class AppTheme {
           fontWeight: FontWeight.bold,
         ),
       ),
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         displayLarge: TextStyle(
           color: textMain,
           fontSize: 32,
@@ -43,9 +92,11 @@ class AppTheme {
         bodyMedium: TextStyle(color: textMain, fontSize: 14),
       ),
       cardTheme: CardThemeData(
-        color: cardColor,
+        color: card,
         elevation: 4,
-        shadowColor: Colors.black.withValues(alpha: 0.05),
+        shadowColor: Colors.black.withValues(
+          alpha: brightness == Brightness.light ? 0.05 : 0.3,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -60,8 +111,8 @@ class AppTheme {
           textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: cardColor,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: card,
         selectedItemColor: primary,
         unselectedItemColor: textLight,
         elevation: 8,

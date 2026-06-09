@@ -27,7 +27,7 @@ class MetricCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppTheme.textLight)),
+                Text(title, style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 const SizedBox(height: 4),
                 Text(value, style: Theme.of(context).textTheme.titleLarge),
               ],

@@ -135,6 +135,10 @@
   "metricUnits": "Metric (KG/CM)",
   "imperialUnits": "Imperial (LBS/IN)",
   "language": "Language",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
   "restTimerDuration": "Rest Timer",
   "secondsValue": "{seconds}s",
   "@secondsValue": {
