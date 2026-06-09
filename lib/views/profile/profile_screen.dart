@@ -155,9 +155,30 @@ class ProfileScreen extends StatelessWidget {
   Future<void> _showMeasurementDialog(BuildContext context) async {
     final l10n = AppLocalizations.of(context);
     final profileVM = context.read<ProfileViewModel>();
+    final settingsVM = context.read<SettingsViewModel>();
+    final lengthUnit = settingsVM.isMetric ? l10n.cmUnit : l10n.inUnit;
     final weightController = TextEditingController();
     final bodyFatController = TextEditingController();
+    final waistController = TextEditingController();
+    final chestController = TextEditingController();
+    final armsController = TextEditingController();
+    final hipsController = TextEditingController();
+    final thighsController = TextEditingController();
     final formKey = GlobalKey<FormState>();
+
+    String? optionalNumberValidator(String? value) {
+      if (value == null || value.trim().isEmpty) return null;
+      return double.tryParse(value) == null ? l10n.invalidNumber : null;
+    }
+
+    Widget optionalField(TextEditingController controller, String label) {
+      return TextFormField(
+        controller: controller,
+        decoration: InputDecoration(labelText: '$label ($lengthUnit)'),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        validator: optionalNumberValidator,
+      );
+    }
 
     final saved = await showDialog<bool>(
       context: context,
@@ -166,31 +187,47 @@ class ProfileScreen extends StatelessWidget {
           title: Text(l10n.logNewMeasurement),
           content: Form(
             key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextFormField(
-                  controller: weightController,
-                  autofocus: true,
-                  decoration: InputDecoration(labelText: l10n.bodyWeightField),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) =>
-                      double.tryParse(value ?? '') == null
-                          ? l10n.invalidNumber
-                          : null,
-                ),
-                TextFormField(
-                  controller: bodyFatController,
-                  decoration: InputDecoration(labelText: l10n.bodyFatField),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  validator: (value) =>
-                      double.tryParse(value ?? '') == null
-                          ? l10n.invalidNumber
-                          : null,
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: weightController,
+                    autofocus: true,
+                    decoration:
+                        InputDecoration(labelText: l10n.bodyWeightField),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    validator: (value) =>
+                        double.tryParse(value ?? '') == null
+                            ? l10n.invalidNumber
+                            : null,
+                  ),
+                  TextFormField(
+                    controller: bodyFatController,
+                    decoration: InputDecoration(labelText: l10n.bodyFatField),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    validator: (value) =>
+                        double.tryParse(value ?? '') == null
+                            ? l10n.invalidNumber
+                            : null,
+                  ),
+                  ExpansionTile(
+                    title: Text(l10n.moreMeasurements,
+                        style: const TextStyle(fontSize: 14)),
+                    tilePadding: EdgeInsets.zero,
+                    childrenPadding: EdgeInsets.zero,
+                    children: [
+                      optionalField(waistController, l10n.waistField),
+                      optionalField(chestController, l10n.chestField),
+                      optionalField(armsController, l10n.armsField),
+                      optionalField(hipsController, l10n.hipsField),
+                      optionalField(thighsController, l10n.thighsField),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -212,9 +249,16 @@ class ProfileScreen extends StatelessWidget {
     );
 
     if (saved == true) {
+      double? optional(TextEditingController c) =>
+          c.text.trim().isEmpty ? null : double.parse(c.text);
       await profileVM.addMeasurement(
         double.parse(weightController.text),
         double.parse(bodyFatController.text),
+        waist: optional(waistController),
+        chest: optional(chestController),
+        arms: optional(armsController),
+        hips: optional(hipsController),
+        thighs: optional(thighsController),
       );
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

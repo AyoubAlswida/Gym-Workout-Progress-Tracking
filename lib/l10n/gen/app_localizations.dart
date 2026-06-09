@@ -452,6 +452,12 @@ abstract class AppLocalizations {
   /// **'Body Weight'**
   String get bodyWeightChart;
 
+  /// No description provided for @bodyTrends.
+  ///
+  /// In en, this message translates to:
+  /// **'Body Trends'**
+  String get bodyTrends;
+
   /// No description provided for @personalRecords.
   ///
   /// In en, this message translates to:
@@ -571,6 +577,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Body Fat %'**
   String get bodyFatField;
+
+  /// No description provided for @moreMeasurements.
+  ///
+  /// In en, this message translates to:
+  /// **'More measurements'**
+  String get moreMeasurements;
+
+  /// No description provided for @waistField.
+  ///
+  /// In en, this message translates to:
+  /// **'Waist'**
+  String get waistField;
+
+  /// No description provided for @chestField.
+  ///
+  /// In en, this message translates to:
+  /// **'Chest'**
+  String get chestField;
+
+  /// No description provided for @armsField.
+  ///
+  /// In en, this message translates to:
+  /// **'Arms'**
+  String get armsField;
+
+  /// No description provided for @hipsField.
+  ///
+  /// In en, this message translates to:
+  /// **'Hips'**
+  String get hipsField;
+
+  /// No description provided for @thighsField.
+  ///
+  /// In en, this message translates to:
+  /// **'Thighs'**
+  String get thighsField;
+
+  /// No description provided for @cmUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'cm'**
+  String get cmUnit;
+
+  /// No description provided for @inUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'in'**
+  String get inUnit;
 
   /// No description provided for @measurementLogged.
   ///

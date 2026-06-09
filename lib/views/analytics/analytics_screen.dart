@@ -15,8 +15,49 @@ class AnalyticsScreen extends StatefulWidget {
   State<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
+enum _MeasurementType { weight, bodyFat, waist, chest, arms, hips, thighs }
+
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
   bool _show1Rm = false;
+  _MeasurementType _measurementType = _MeasurementType.weight;
+
+  String _measurementLabel(AppLocalizations l10n, _MeasurementType type) {
+    switch (type) {
+      case _MeasurementType.weight:
+        return l10n.bodyWeightField;
+      case _MeasurementType.bodyFat:
+        return l10n.bodyFatField;
+      case _MeasurementType.waist:
+        return l10n.waistField;
+      case _MeasurementType.chest:
+        return l10n.chestField;
+      case _MeasurementType.arms:
+        return l10n.armsField;
+      case _MeasurementType.hips:
+        return l10n.hipsField;
+      case _MeasurementType.thighs:
+        return l10n.thighsField;
+    }
+  }
+
+  double? _measurementValue(BodyMeasurement m, _MeasurementType type) {
+    switch (type) {
+      case _MeasurementType.weight:
+        return m.bodyWeight;
+      case _MeasurementType.bodyFat:
+        return m.bodyFatPercentage;
+      case _MeasurementType.waist:
+        return m.waist;
+      case _MeasurementType.chest:
+        return m.chest;
+      case _MeasurementType.arms:
+        return m.arms;
+      case _MeasurementType.hips:
+        return m.hips;
+      case _MeasurementType.thighs:
+        return m.thighs;
+    }
+  }
 
   @override
   void initState() {
@@ -143,14 +184,45 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
               const SizedBox(height: 32),
 
-              // --- Body weight ---
-              Text(l10n.bodyWeightChart,
+              // --- Body trends (weight / fat / circumferences) ---
+              Text(l10n.bodyTrends,
                   style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 12),
-              if (analyticsVM.measurements.length < 2)
+              if (analyticsVM.measurements.isEmpty)
                 _EmptyChart(message: l10n.noDataYet, height: 120)
-              else
-                _BodyWeightChart(measurements: analyticsVM.measurements),
+              else ...[
+                DropdownButtonFormField<_MeasurementType>(
+                  initialValue: _measurementType,
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    border: OutlineInputBorder(),
+                  ),
+                  items: _MeasurementType.values
+                      .map((t) => DropdownMenuItem(
+                          value: t, child: Text(_measurementLabel(l10n, t))))
+                      .toList(),
+                  onChanged: (t) {
+                    if (t != null) setState(() => _measurementType = t);
+                  },
+                ),
+                const SizedBox(height: 16),
+                Builder(builder: (context) {
+                  // Newest-first from the repo; the chart wants oldest-first.
+                  // Entries without this measurement are skipped.
+                  final points = analyticsVM.measurements.reversed
+                      .map((m) => (
+                            date: DateTime.parse(m.date),
+                            value: _measurementValue(m, _measurementType),
+                          ))
+                      .where((p) => p.value != null)
+                      .map((p) => (date: p.date, value: p.value!))
+                      .toList();
+                  if (points.length < 2) {
+                    return _EmptyChart(message: l10n.noDataYet, height: 120);
+                  }
+                  return _MeasurementChart(points: points);
+                }),
+              ],
               const SizedBox(height: 32),
 
               // --- Measurement history ---
@@ -367,19 +439,17 @@ class _VolumeChart extends StatelessWidget {
   }
 }
 
-class _BodyWeightChart extends StatelessWidget {
-  final List<BodyMeasurement> measurements;
+class _MeasurementChart extends StatelessWidget {
+  final List<({DateTime date, double value})> points;
 
-  const _BodyWeightChart({required this.measurements});
+  const _MeasurementChart({required this.points});
 
   @override
   Widget build(BuildContext context) {
-    // Measurements arrive newest-first; the chart needs oldest-first.
-    final ascending = measurements.reversed.toList();
-    final spots = ascending
+    final spots = points
         .asMap()
         .entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value.bodyWeight))
+        .map((e) => FlSpot(e.key.toDouble(), e.value.value))
         .toList();
 
     return SizedBox(

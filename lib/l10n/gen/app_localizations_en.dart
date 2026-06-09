@@ -217,6 +217,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bodyWeightChart => 'Body Weight';
 
   @override
+  String get bodyTrends => 'Body Trends';
+
+  @override
   String get personalRecords => 'Personal Records';
 
   @override
@@ -281,6 +284,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bodyFatField => 'Body Fat %';
+
+  @override
+  String get moreMeasurements => 'More measurements';
+
+  @override
+  String get waistField => 'Waist';
+
+  @override
+  String get chestField => 'Chest';
+
+  @override
+  String get armsField => 'Arms';
+
+  @override
+  String get hipsField => 'Hips';
+
+  @override
+  String get thighsField => 'Thighs';
+
+  @override
+  String get cmUnit => 'cm';
+
+  @override
+  String get inUnit => 'in';
 
   @override
   String get measurementLogged => 'Measurement logged!';

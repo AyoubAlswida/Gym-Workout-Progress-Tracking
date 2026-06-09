@@ -17,11 +17,24 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addMeasurement(double weight, double bodyFat) async {
+  Future<void> addMeasurement(
+    double weight,
+    double bodyFat, {
+    double? waist,
+    double? chest,
+    double? arms,
+    double? hips,
+    double? thighs,
+  }) async {
     final newMeasurement = BodyMeasurement(
       date: DateTime.now().toIso8601String(),
       bodyWeight: weight,
       bodyFatPercentage: bodyFat,
+      waist: waist,
+      chest: chest,
+      arms: arms,
+      hips: hips,
+      thighs: thighs,
     );
     await _repository.insertMeasurement(newMeasurement);
     await loadMeasurements();

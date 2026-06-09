@@ -219,6 +219,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bodyWeightChart => 'وزن الجسم';
 
   @override
+  String get bodyTrends => 'مؤشرات الجسم';
+
+  @override
   String get personalRecords => 'الأرقام القياسية';
 
   @override
@@ -283,6 +286,30 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bodyFatField => 'نسبة الدهون %';
+
+  @override
+  String get moreMeasurements => 'قياسات إضافية';
+
+  @override
+  String get waistField => 'الخصر';
+
+  @override
+  String get chestField => 'الصدر';
+
+  @override
+  String get armsField => 'الذراع';
+
+  @override
+  String get hipsField => 'الورك';
+
+  @override
+  String get thighsField => 'الفخذ';
+
+  @override
+  String get cmUnit => 'سم';
+
+  @override
+  String get inUnit => 'إنش';
 
   @override
   String get measurementLogged => 'تم تسجيل القياس!';
