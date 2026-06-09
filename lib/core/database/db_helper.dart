@@ -27,7 +27,7 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -67,7 +67,9 @@ class DatabaseHelper {
         exerciseId $integerType,
         weight $realType,
         reps $integerType,
-        isCompleted $integerType
+        isCompleted $integerType,
+        durationSeconds INTEGER,
+        distanceMeters REAL
       )
     ''');
 
@@ -76,11 +78,17 @@ class DatabaseHelper {
         id $idType,
         date $textType,
         bodyWeight $realType,
-        bodyFatPercentage $realType
+        bodyFatPercentage $realType,
+        waist REAL,
+        chest REAL,
+        arms REAL,
+        hips REAL,
+        thighs REAL
       )
     ''');
 
     await _createV2Tables(db);
+    await _createV3Tables(db);
     await _seedData(db);
   }
 
@@ -94,8 +102,33 @@ class DatabaseHelper {
           'ALTER TABLE exercises ADD COLUMN isCustom INTEGER NOT NULL DEFAULT 0');
       await db.execute('ALTER TABLE workout_sessions ADD COLUMN notes TEXT');
       await _createV2Tables(db);
-      await _seedData(db);
+      // Seeding runs once at the end of the upgrade chain.
     }
+    if (oldVersion < 3) {
+      await db.execute(
+          'ALTER TABLE workout_sets ADD COLUMN durationSeconds INTEGER');
+      await db
+          .execute('ALTER TABLE workout_sets ADD COLUMN distanceMeters REAL');
+      await db.execute('ALTER TABLE body_measurements ADD COLUMN waist REAL');
+      await db.execute('ALTER TABLE body_measurements ADD COLUMN chest REAL');
+      await db.execute('ALTER TABLE body_measurements ADD COLUMN arms REAL');
+      await db.execute('ALTER TABLE body_measurements ADD COLUMN hips REAL');
+      await db.execute('ALTER TABLE body_measurements ADD COLUMN thighs REAL');
+      await _createV3Tables(db);
+    }
+    // Idempotent — picks up any catalog additions (e.g. v3 cardio exercises).
+    await _seedData(db);
+  }
+
+  Future _createV3Tables(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS progress_photos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        filePath TEXT NOT NULL,
+        note TEXT
+      )
+    ''');
   }
 
   Future _createV2Tables(Database db) async {

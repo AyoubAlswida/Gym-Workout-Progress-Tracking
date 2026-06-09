@@ -65,6 +65,16 @@ const List<Map<String, String>> exerciseSeedData = [
   {'name': 'Russian Twist', 'category': 'Core', 'muscleGroup': 'Core', 'equipment': 'Bodyweight'},
   {'name': 'Cable Crunch', 'category': 'Core', 'muscleGroup': 'Core', 'equipment': 'Cable'},
   {'name': 'Ab Wheel Rollout', 'category': 'Core', 'muscleGroup': 'Core', 'equipment': 'Other'},
+
+  // Cardio (logged as duration/distance instead of weight/reps)
+  {'name': 'Running (Treadmill)', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Machine'},
+  {'name': 'Cycling (Stationary Bike)', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Machine'},
+  {'name': 'Rowing Machine', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Machine'},
+  {'name': 'Elliptical', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Machine'},
+  {'name': 'Stair Climber', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Machine'},
+  {'name': 'Jump Rope', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Other'},
+  {'name': 'Swimming', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Bodyweight'},
+  {'name': 'Incline Walking', 'category': 'Cardio', 'muscleGroup': 'Other', 'equipment': 'Machine'},
 ];
 
 /// Preset routines seeded on first run / upgrade.
