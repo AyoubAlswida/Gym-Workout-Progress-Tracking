@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'dart:async';
+import '../core/coach/coach_service.dart';
 import '../models/exercise.dart';
 import '../models/routine.dart';
 import '../models/routine_exercise.dart';
@@ -35,11 +36,15 @@ class SessionViewModel extends ChangeNotifier {
   final WorkoutRepository _repository;
   final SettingsRepository _settingsRepository;
 
+  final CoachService _coachService;
+
   SessionViewModel({
     WorkoutRepository? repository,
     SettingsRepository? settingsRepository,
+    CoachService? coachService,
   })  : _repository = repository ?? WorkoutRepository(),
-        _settingsRepository = settingsRepository ?? SettingsRepository();
+        _settingsRepository = settingsRepository ?? SettingsRepository(),
+        _coachService = coachService ?? CoachService();
 
   // Active session data
   WorkoutSession? _activeSession;
@@ -56,6 +61,10 @@ class SessionViewModel extends ChangeNotifier {
   final Map<int, WorkoutSet?> _lastPerformance = {};
   WorkoutSet? lastPerformanceFor(int exerciseId) =>
       _lastPerformance[exerciseId];
+
+  /// Coach's next-set suggestion per exercise (null for cardio or no history).
+  final Map<int, CoachSuggestion?> _suggestions = {};
+  CoachSuggestion? suggestionFor(int exerciseId) => _suggestions[exerciseId];
 
   /// All-time max weight per exercise (pre-session baseline, updated as
   /// PRs land mid-session so a second heavier set is a PR again).
@@ -100,6 +109,7 @@ class SessionViewModel extends ChangeNotifier {
     );
     _exerciseGroups.clear();
     _lastPerformance.clear();
+    _suggestions.clear();
     _maxWeights.clear();
     _latestPr = null;
     _startTime = DateTime.now();
@@ -144,8 +154,30 @@ class SessionViewModel extends ChangeNotifier {
       excludeSessionId: _activeSession!.id,
     );
     if (maxWeight != null) _maxWeights[exerciseId] = maxWeight;
+
+    // Coaching is strength-only; cardio sets carry no weight signal.
+    if (exercise.category != 'Cardio') {
+      final rows = await _repository.getExerciseProgress(exerciseId);
+      final history = rows
+          .map((row) => SetSnapshot(
+                weight: (row['maxWeight'] as num).toDouble(),
+                reps: row['reps'] as int,
+                date: DateTime.parse(row['date'] as String),
+              ))
+          .toList();
+      final goal = _parseGoal(await _settingsRepository.getTrainingGoal());
+      _suggestions[exerciseId] = _coachService.suggestNext(
+        history,
+        goal: goal,
+        isMetric: await _settingsRepository.getIsMetric(),
+      );
+    }
     notifyListeners();
   }
+
+  static TrainingGoal _parseGoal(String value) => TrainingGoal.values
+      .firstWhere((g) => g.name == value,
+          orElse: () => TrainingGoal.hypertrophy);
 
   Future<void> addSet(int exerciseId, double weight, int reps,
       {int? durationSeconds, double? distanceMeters}) async {
@@ -253,6 +285,7 @@ class SessionViewModel extends ChangeNotifier {
     _activeSession = null;
     _exerciseGroups.clear();
     _lastPerformance.clear();
+    _suggestions.clear();
     _maxWeights.clear();
     notifyListeners();
   }

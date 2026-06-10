@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gym_workout_tracking/core/coach/coach_service.dart';
 import 'package:gym_workout_tracking/services/notification_service.dart';
 import 'package:gym_workout_tracking/viewmodels/settings_viewmodel.dart';
 
@@ -66,6 +67,34 @@ void main() {
       final vm = SettingsViewModel();
       await vm.load();
       expect(vm.themeMode, ThemeMode.system);
+    });
+  });
+
+  group('SettingsViewModel trainingGoal', () {
+    test('defaults to hypertrophy when nothing stored', () async {
+      SharedPreferences.setMockInitialValues({});
+      final vm = SettingsViewModel();
+      await vm.load();
+      expect(vm.trainingGoal, TrainingGoal.hypertrophy);
+    });
+
+    test('persists and restores the selected goal', () async {
+      SharedPreferences.setMockInitialValues({});
+      final vm = SettingsViewModel();
+      await vm.load();
+      await vm.setTrainingGoal(TrainingGoal.strength);
+      expect(vm.trainingGoal, TrainingGoal.strength);
+
+      final vm2 = SettingsViewModel();
+      await vm2.load();
+      expect(vm2.trainingGoal, TrainingGoal.strength);
+    });
+
+    test('falls back to hypertrophy on an unknown stored value', () async {
+      SharedPreferences.setMockInitialValues({'trainingGoal': 'powerlifting'});
+      final vm = SettingsViewModel();
+      await vm.load();
+      expect(vm.trainingGoal, TrainingGoal.hypertrophy);
     });
   });
 

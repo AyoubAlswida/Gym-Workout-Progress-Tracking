@@ -258,6 +258,48 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get coachInsights => 'نصائح المدرّب';
+
+  @override
+  String get coachSuggestedNextSet => 'الطقم التالي المقترح';
+
+  @override
+  String coachTryWeightReps(String weight, String unit, int reps) {
+    return 'جرّب $weight $unit × $reps';
+  }
+
+  @override
+  String get coachReasonAddRep => 'أضف تكراراً قبل زيادة الوزن';
+
+  @override
+  String get coachReasonIncreaseWeight => 'بلغت أعلى نطاقك — زِد الوزن';
+
+  @override
+  String get coachReasonMaintain => 'ثبّت هذا الوزن وأتقن الحركة';
+
+  @override
+  String get noSuggestionYet => 'سجّل طقماً لتحصل على اقتراح';
+
+  @override
+  String get plateauWarning => 'ثبات محتمل في المستوى';
+
+  @override
+  String get plateauTip =>
+      'توقّف تقدير 1RM عن التحسّن. جرّب تخفيف الحمل، أو تغيير نطاق التكرارات، أو إضافة تمرين بديل.';
+
+  @override
+  String get trainingGoal => 'هدف التدريب';
+
+  @override
+  String get goalStrength => 'قوة (4-6)';
+
+  @override
+  String get goalHypertrophy => 'تضخيم (8-12)';
+
+  @override
+  String get goalEndurance => 'تحمّل (12-20)';
+
+  @override
   String get settingsProfile => 'الإعدادات والملف الشخصي';
 
   @override

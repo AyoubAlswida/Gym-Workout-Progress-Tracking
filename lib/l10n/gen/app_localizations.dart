@@ -500,6 +500,84 @@ abstract class AppLocalizations {
   /// **'Body Fat: {percent}%'**
   String bodyFatEntry(String percent);
 
+  /// No description provided for @coachInsights.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach Insights'**
+  String get coachInsights;
+
+  /// No description provided for @coachSuggestedNextSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested next set'**
+  String get coachSuggestedNextSet;
+
+  /// No description provided for @coachTryWeightReps.
+  ///
+  /// In en, this message translates to:
+  /// **'Try {weight} {unit} x {reps}'**
+  String coachTryWeightReps(String weight, String unit, int reps);
+
+  /// No description provided for @coachReasonAddRep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a rep before adding weight'**
+  String get coachReasonAddRep;
+
+  /// No description provided for @coachReasonIncreaseWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'You hit the top of your range — go heavier'**
+  String get coachReasonIncreaseWeight;
+
+  /// No description provided for @coachReasonMaintain.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold this weight and groove the movement'**
+  String get coachReasonMaintain;
+
+  /// No description provided for @noSuggestionYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Log a set to get a suggestion'**
+  String get noSuggestionYet;
+
+  /// No description provided for @plateauWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Possible plateau'**
+  String get plateauWarning;
+
+  /// No description provided for @plateauTip.
+  ///
+  /// In en, this message translates to:
+  /// **'Your estimated 1RM has stalled. Try a deload, change rep ranges, or add a variation.'**
+  String get plateauTip;
+
+  /// No description provided for @trainingGoal.
+  ///
+  /// In en, this message translates to:
+  /// **'Training Goal'**
+  String get trainingGoal;
+
+  /// No description provided for @goalStrength.
+  ///
+  /// In en, this message translates to:
+  /// **'Strength (4-6)'**
+  String get goalStrength;
+
+  /// No description provided for @goalHypertrophy.
+  ///
+  /// In en, this message translates to:
+  /// **'Hypertrophy (8-12)'**
+  String get goalHypertrophy;
+
+  /// No description provided for @goalEndurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Endurance (12-20)'**
+  String get goalEndurance;
+
   /// No description provided for @settingsProfile.
   ///
   /// In en, this message translates to:

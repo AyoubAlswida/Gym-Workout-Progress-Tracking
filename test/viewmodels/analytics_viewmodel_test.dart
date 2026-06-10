@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gym_workout_tracking/core/coach/coach_service.dart';
 import 'package:gym_workout_tracking/models/workout_session.dart';
 import 'package:gym_workout_tracking/models/workout_set.dart';
 import 'package:gym_workout_tracking/repositories/workout_repository.dart';
@@ -9,12 +11,15 @@ import 'package:gym_workout_tracking/viewmodels/analytics_viewmodel.dart';
 import '../test_db_helper.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late Directory tempDir;
   late AnalyticsViewModel viewModel;
   late WorkoutRepository repository;
 
   setUp(() async {
     tempDir = await setupTestDatabase();
+    SharedPreferences.setMockInitialValues({});
     repository = WorkoutRepository();
     viewModel = AnalyticsViewModel();
   });
@@ -89,6 +94,41 @@ void main() {
           .reduce((a, b) => a + b),
       0,
     );
+  });
+
+  test('coach suggestion is built from the selected exercise history', () async {
+    // Last session hit the hypertrophy ceiling (12 reps) at 80 kg.
+    await insertCompletedSet(
+        date: '2026-05-20T10:00:00.000', exerciseId: 1, weight: 80, reps: 8);
+    await insertCompletedSet(
+        date: '2026-06-01T10:00:00.000', exerciseId: 1, weight: 80, reps: 12);
+
+    await viewModel.load();
+
+    final s = viewModel.coachSuggestion;
+    expect(s, isNotNull);
+    expect(s!.reason, SuggestionReason.increaseWeight);
+    expect(s.weight, 82.5);
+    expect(s.reps, 8);
+    expect(viewModel.isPlateau, isFalse);
+  });
+
+  test('flat estimated 1RM across recent sessions is a plateau', () async {
+    // Peak then three sessions that never beat it.
+    await insertCompletedSet(
+        date: '2026-04-01T10:00:00.000', exerciseId: 1, weight: 80, reps: 8);
+    await insertCompletedSet(
+        date: '2026-04-08T10:00:00.000', exerciseId: 1, weight: 90, reps: 8);
+    await insertCompletedSet(
+        date: '2026-04-15T10:00:00.000', exerciseId: 1, weight: 88, reps: 8);
+    await insertCompletedSet(
+        date: '2026-04-22T10:00:00.000', exerciseId: 1, weight: 89, reps: 8);
+    await insertCompletedSet(
+        date: '2026-04-29T10:00:00.000', exerciseId: 1, weight: 90, reps: 8);
+
+    await viewModel.load();
+
+    expect(viewModel.isPlateau, isTrue);
   });
 
   test('personal records list one entry per exercise', () async {

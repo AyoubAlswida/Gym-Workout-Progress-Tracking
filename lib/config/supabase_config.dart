@@ -5,8 +5,9 @@
 ///
 /// See docs/SUPABASE_SETUP.md for the full setup walkthrough.
 class SupabaseConfig {
-  static const String url = 'YOUR_SUPABASE_URL';
-  static const String anonKey = 'YOUR_SUPABASE_ANON_KEY';
+  static const String url = 'https://hpwoggdyrolyeaxgkfma.supabase.co';
+  static const String anonKey =
+      'sb_publishable_9CzYd_CpSui8EauqulMhHQ_UgGMAWRM';
 
   static bool get isConfigured =>
       !url.startsWith('YOUR_') && !anonKey.startsWith('YOUR_');

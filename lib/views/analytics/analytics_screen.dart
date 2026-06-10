@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
+import '../../core/coach/coach_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../../models/body_measurement.dart';
@@ -143,6 +144,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   show1Rm: _show1Rm,
                   dateFormat: dateFormat,
                 ),
+                const SizedBox(height: 16),
+                _CoachInsightsCard(
+                  suggestion: analyticsVM.coachSuggestion,
+                  isPlateau: analyticsVM.isPlateau,
+                  unit: unit,
+                ),
               ],
               const SizedBox(height: 32),
 
@@ -260,6 +267,105 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 String _formatWeight(double weight) => weight == weight.roundToDouble()
     ? weight.toStringAsFixed(0)
     : weight.toStringAsFixed(1);
+
+class _CoachInsightsCard extends StatelessWidget {
+  final CoachSuggestion? suggestion;
+  final bool isPlateau;
+  final String unit;
+
+  const _CoachInsightsCard({
+    required this.suggestion,
+    required this.isPlateau,
+    required this.unit,
+  });
+
+  static String _reasonLabel(AppLocalizations l10n, SuggestionReason reason) {
+    switch (reason) {
+      case SuggestionReason.addRep:
+        return l10n.coachReasonAddRep;
+      case SuggestionReason.increaseWeight:
+        return l10n.coachReasonIncreaseWeight;
+      case SuggestionReason.maintain:
+        return l10n.coachReasonMaintain;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final suggestion = this.suggestion;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.tips_and_updates_outlined,
+                    size: 20, color: AppTheme.primary),
+                const SizedBox(width: 8),
+                Text(l10n.coachInsights,
+                    style: Theme.of(context).textTheme.titleMedium),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (suggestion == null)
+              Text(l10n.noSuggestionYet,
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant))
+            else ...[
+              Text(l10n.coachSuggestedNextSet,
+                  style: Theme.of(context).textTheme.bodySmall),
+              const SizedBox(height: 4),
+              Text(
+                l10n.coachTryWeightReps(
+                    _formatWeight(suggestion.weight), unit, suggestion.reps),
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              Text(_reasonLabel(l10n, suggestion.reason),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant)),
+            ],
+            if (isPlateau) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.warning_amber_rounded,
+                        size: 20, color: Colors.orange),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(l10n.plateauWarning,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 2),
+                          Text(l10n.plateauTip,
+                              style: Theme.of(context).textTheme.bodySmall),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class _EmptyChart extends StatelessWidget {
   final String message;

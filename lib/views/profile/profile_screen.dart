@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../config/supabase_config.dart';
+import '../../core/coach/coach_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../../services/backup_file_service.dart';
@@ -129,6 +130,37 @@ class ProfileScreen extends StatelessWidget {
                         selectedColor: AppTheme.primary.withValues(alpha: 0.3),
                         onSelected: (_) {
                           settingsVM.setRestTimerSeconds(seconds);
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.trainingGoal,
+                      style: Theme.of(context).textTheme.bodyLarge),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      (TrainingGoal.strength, l10n.goalStrength),
+                      (TrainingGoal.hypertrophy, l10n.goalHypertrophy),
+                      (TrainingGoal.endurance, l10n.goalEndurance),
+                    ].map((entry) {
+                      return ChoiceChip(
+                        label: Text(entry.$2),
+                        selected: settingsVM.trainingGoal == entry.$1,
+                        selectedColor: AppTheme.primary.withValues(alpha: 0.3),
+                        onSelected: (_) {
+                          settingsVM.setTrainingGoal(entry.$1);
                         },
                       );
                     }).toList(),

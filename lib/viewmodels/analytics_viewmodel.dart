@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
+import '../core/coach/coach_service.dart';
+import '../core/fitness/one_rep_max.dart' as fitness;
 import '../models/body_measurement.dart';
 import '../models/exercise.dart';
 import '../repositories/measurement_repository.dart';
+import '../repositories/settings_repository.dart';
 import '../repositories/workout_repository.dart';
 
 class ExerciseProgressPoint {
@@ -42,13 +45,19 @@ class PersonalRecord {
 class AnalyticsViewModel extends ChangeNotifier {
   final WorkoutRepository _workoutRepository;
   final MeasurementRepository _measurementRepository;
+  final SettingsRepository _settingsRepository;
+  final CoachService _coachService;
 
   AnalyticsViewModel({
     WorkoutRepository? workoutRepository,
     MeasurementRepository? measurementRepository,
+    SettingsRepository? settingsRepository,
+    CoachService? coachService,
   })  : _workoutRepository = workoutRepository ?? WorkoutRepository(),
         _measurementRepository =
-            measurementRepository ?? MeasurementRepository();
+            measurementRepository ?? MeasurementRepository(),
+        _settingsRepository = settingsRepository ?? SettingsRepository(),
+        _coachService = coachService ?? CoachService();
 
   List<Exercise> _exercisesWithData = [];
   List<Exercise> get exercisesWithData => _exercisesWithData;
@@ -58,6 +67,12 @@ class AnalyticsViewModel extends ChangeNotifier {
 
   List<ExerciseProgressPoint> _progressPoints = [];
   List<ExerciseProgressPoint> get progressPoints => _progressPoints;
+
+  CoachSuggestion? _coachSuggestion;
+  CoachSuggestion? get coachSuggestion => _coachSuggestion;
+
+  bool _isPlateau = false;
+  bool get isPlateau => _isPlateau;
 
   List<WeeklyVolumePoint> _weeklyVolume = [];
   List<WeeklyVolumePoint> get weeklyVolume => _weeklyVolume;
@@ -70,7 +85,7 @@ class AnalyticsViewModel extends ChangeNotifier {
 
   /// Epley formula; a 1-rep set is already its own max.
   static double estimate1Rm(double weight, int reps) =>
-      reps <= 1 ? weight : weight * (1 + reps / 30.0);
+      fitness.estimate1Rm(weight, reps);
 
   Future<void> load() async {
     _exercisesWithData = await _workoutRepository.getExercisesWithData();
@@ -95,19 +110,36 @@ class AnalyticsViewModel extends ChangeNotifier {
     final exercise = _selectedExercise;
     if (exercise == null) {
       _progressPoints = [];
+      _coachSuggestion = null;
+      _isPlateau = false;
       return;
     }
     final rows = await _workoutRepository.getExerciseProgress(exercise.id!);
+    final snapshots = <SetSnapshot>[];
     _progressPoints = rows.map((row) {
       final weight = (row['maxWeight'] as num).toDouble();
       final reps = row['reps'] as int;
+      final date = DateTime.parse(row['date'] as String);
+      snapshots.add(SetSnapshot(weight: weight, reps: reps, date: date));
       return ExerciseProgressPoint(
-        date: DateTime.parse(row['date'] as String),
+        date: date,
         maxWeight: weight,
         estimated1Rm: estimate1Rm(weight, reps),
       );
     }).toList();
+
+    final goal = _parseGoal(await _settingsRepository.getTrainingGoal());
+    _coachSuggestion = _coachService.suggestNext(
+      snapshots,
+      goal: goal,
+      isMetric: await _settingsRepository.getIsMetric(),
+    );
+    _isPlateau = _coachService.detectPlateau(snapshots);
   }
+
+  static TrainingGoal _parseGoal(String value) => TrainingGoal.values
+      .firstWhere((g) => g.name == value,
+          orElse: () => TrainingGoal.hypertrophy);
 
   Future<void> _loadWeeklyVolume({int weeks = 8}) async {
     final rows = await _workoutRepository.getCompletedSetVolumes();

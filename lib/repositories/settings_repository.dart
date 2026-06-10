@@ -8,6 +8,7 @@ class SettingsRepository {
   static const _keyRemindersEnabled = 'remindersEnabled';
   static const _keyReminderDays = 'reminderDays';
   static const _keyReminderTime = 'reminderTime';
+  static const _keyTrainingGoal = 'trainingGoal';
 
   Future<bool> getIsMetric() async {
     final prefs = await SharedPreferences.getInstance();
@@ -80,5 +81,16 @@ class SettingsRepository {
   Future<void> setReminderTime(String value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyReminderTime, value);
+  }
+
+  /// One of 'strength', 'hypertrophy', 'endurance'.
+  Future<String> getTrainingGoal() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyTrainingGoal) ?? 'hypertrophy';
+  }
+
+  Future<void> setTrainingGoal(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyTrainingGoal, value);
   }
 }

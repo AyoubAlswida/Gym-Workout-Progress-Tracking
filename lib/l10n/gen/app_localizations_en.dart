@@ -254,6 +254,49 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get coachInsights => 'Coach Insights';
+
+  @override
+  String get coachSuggestedNextSet => 'Suggested next set';
+
+  @override
+  String coachTryWeightReps(String weight, String unit, int reps) {
+    return 'Try $weight $unit x $reps';
+  }
+
+  @override
+  String get coachReasonAddRep => 'Add a rep before adding weight';
+
+  @override
+  String get coachReasonIncreaseWeight =>
+      'You hit the top of your range — go heavier';
+
+  @override
+  String get coachReasonMaintain => 'Hold this weight and groove the movement';
+
+  @override
+  String get noSuggestionYet => 'Log a set to get a suggestion';
+
+  @override
+  String get plateauWarning => 'Possible plateau';
+
+  @override
+  String get plateauTip =>
+      'Your estimated 1RM has stalled. Try a deload, change rep ranges, or add a variation.';
+
+  @override
+  String get trainingGoal => 'Training Goal';
+
+  @override
+  String get goalStrength => 'Strength (4-6)';
+
+  @override
+  String get goalHypertrophy => 'Hypertrophy (8-12)';
+
+  @override
+  String get goalEndurance => 'Endurance (12-20)';
+
+  @override
   String get settingsProfile => 'Settings & Profile';
 
   @override

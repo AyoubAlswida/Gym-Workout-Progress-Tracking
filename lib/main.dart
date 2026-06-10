@@ -28,6 +28,11 @@ import 'viewmodels/sync_viewmodel.dart';
 import 'viewmodels/workout_viewmodel.dart';
 import 'views/main_navigation.dart';
 
+/// True only after Supabase.initialize() actually ran. Distinct from
+/// [SupabaseConfig.isConfigured] (has keys): widget tests pump the app without
+/// calling main(), so they must not touch Supabase even when keys are present.
+bool _supabaseReady = false;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // sqflite has no native implementation on desktop; route through FFI.
@@ -44,6 +49,7 @@ Future<void> main() async {
       // The anon key is Supabase's current publishable key.
       publishableKey: SupabaseConfig.anonKey,
     );
+    _supabaseReady = true;
   }
   runApp(const GymTrackerApp());
 }
@@ -63,14 +69,13 @@ class _GymTrackerAppState extends State<GymTrackerApp>
   @override
   void initState() {
     super.initState();
-    final authApi =
-        SupabaseConfig.isConfigured ? SupabaseAuthService() : OfflineAuthApi();
+    final authApi = _supabaseReady ? SupabaseAuthService() : OfflineAuthApi();
     _syncVM = SyncViewModel(runSync: _runSync, canSync: _canSync);
     _authVM = AuthViewModel(auth: authApi, onSignedIn: _syncVM.syncNow);
     WidgetsBinding.instance.addObserver(this);
   }
 
-  bool _canSync() => SupabaseConfig.isConfigured && _authVM.isSignedIn;
+  bool _canSync() => _supabaseReady && _authVM.isSignedIn;
 
   Future<void> _runSync() async {
     final user = _authVM.user;

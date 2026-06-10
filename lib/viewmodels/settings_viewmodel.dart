@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/coach/coach_service.dart';
 import '../repositories/settings_repository.dart';
 import '../services/notification_service.dart';
 
@@ -35,6 +36,9 @@ class SettingsViewModel extends ChangeNotifier {
   TimeOfDay _reminderTime = const TimeOfDay(hour: 18, minute: 0);
   TimeOfDay get reminderTime => _reminderTime;
 
+  TrainingGoal _trainingGoal = TrainingGoal.hypertrophy;
+  TrainingGoal get trainingGoal => _trainingGoal;
+
   bool get remindersSupported => NotificationService.isSupported;
 
   Future<void> load() async {
@@ -45,8 +49,18 @@ class SettingsViewModel extends ChangeNotifier {
     _remindersEnabled = await _repository.getRemindersEnabled();
     _reminderDays = _parseDays(await _repository.getReminderDays());
     _reminderTime = _parseTime(await _repository.getReminderTime());
+    _trainingGoal = _parseGoal(await _repository.getTrainingGoal());
     notifyListeners();
   }
+
+  Future<void> setTrainingGoal(TrainingGoal goal) async {
+    _trainingGoal = goal;
+    notifyListeners();
+    await _repository.setTrainingGoal(goal.name);
+  }
+
+  static TrainingGoal _parseGoal(String value) => TrainingGoal.values
+      .firstWhere((g) => g.name == value, orElse: () => TrainingGoal.hypertrophy);
 
   Future<void> toggleUnits() async {
     _isMetric = !_isMetric;

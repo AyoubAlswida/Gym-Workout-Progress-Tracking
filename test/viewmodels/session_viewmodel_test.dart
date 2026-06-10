@@ -196,6 +196,33 @@ void main() {
     expect(stored.where((s) => s.durationSeconds != null).length, 1);
   });
 
+  test('addExercise computes a coach suggestion from history', () async {
+    final bench = await benchPress();
+    // Last completed session topped the hypertrophy ceiling (12 reps).
+    final oldId = await repository.insertSession(WorkoutSession(
+        date: '2026-05-01T10:00:00.000', duration: 0, routineName: 'Old'));
+    final oldSet = await repository.insertSet(WorkoutSet(
+        sessionId: oldId, exerciseId: bench.id!, weight: 80, reps: 12));
+    await repository.updateSetCompletion(oldSet, true);
+
+    await viewModel.initSession('Quick Workout');
+    await viewModel.addExercise(bench);
+
+    // Default goal is hypertrophy, metric → +2.5 kg, reset to 8 reps.
+    final suggestion = viewModel.suggestionFor(bench.id!);
+    expect(suggestion, isNotNull);
+    expect(suggestion!.weight, 82.5);
+    expect(suggestion.reps, 8);
+  });
+
+  test('cardio exercises get no coach suggestion', () async {
+    await viewModel.initSession('Quick Workout');
+    final running = (await repository.getExercises())
+        .firstWhere((e) => e.name == 'Running (Treadmill)');
+    await viewModel.addExercise(running);
+    expect(viewModel.suggestionFor(running.id!), isNull);
+  });
+
   test('lastPerformance hint loads previous completed set', () async {
     final bench = await benchPress();
     final oldId = await repository.insertSession(WorkoutSession(

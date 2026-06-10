@@ -152,6 +152,27 @@
     }
   },
 
+  "coachInsights": "Coach Insights",
+  "coachSuggestedNextSet": "Suggested next set",
+  "coachTryWeightReps": "Try {weight} {unit} x {reps}",
+  "@coachTryWeightReps": {
+    "placeholders": {
+      "weight": {"type": "String"},
+      "unit": {"type": "String"},
+      "reps": {"type": "int"}
+    }
+  },
+  "coachReasonAddRep": "Add a rep before adding weight",
+  "coachReasonIncreaseWeight": "You hit the top of your range — go heavier",
+  "coachReasonMaintain": "Hold this weight and groove the movement",
+  "noSuggestionYet": "Log a set to get a suggestion",
+  "plateauWarning": "Possible plateau",
+  "plateauTip": "Your estimated 1RM has stalled. Try a deload, change rep ranges, or add a variation.",
+  "trainingGoal": "Training Goal",
+  "goalStrength": "Strength (4-6)",
+  "goalHypertrophy": "Hypertrophy (8-12)",
+  "goalEndurance": "Endurance (12-20)",
+
   "settingsProfile": "Settings & Profile",
   "athlete": "Athlete",
   "measurementUnit": "Measurement Unit",

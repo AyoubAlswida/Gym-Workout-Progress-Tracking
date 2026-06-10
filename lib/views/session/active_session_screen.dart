@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../core/coach/coach_service.dart';
 import '../../core/localization/domain_translations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/gen/app_localizations.dart';
@@ -184,6 +185,17 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
           ? weight.toStringAsFixed(0)
           : weight.toStringAsFixed(1);
 
+  String _reasonLabel(AppLocalizations l10n, SuggestionReason reason) {
+    switch (reason) {
+      case SuggestionReason.addRep:
+        return l10n.coachReasonAddRep;
+      case SuggestionReason.increaseWeight:
+        return l10n.coachReasonIncreaseWeight;
+      case SuggestionReason.maintain:
+        return l10n.coachReasonMaintain;
+    }
+  }
+
   String _formatDuration(int seconds) {
     final hours = seconds ~/ 3600;
     final minutes = ((seconds % 3600) ~/ 60).toString().padLeft(2, '0');
@@ -226,6 +238,8 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
     final l10n = AppLocalizations.of(context);
     final group = widget.group;
     final lastSet = sessionVM.lastPerformanceFor(group.exercise.id!);
+    final suggestion =
+        _isCardio ? null : sessionVM.suggestionFor(group.exercise.id!);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -261,6 +275,26 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                       fontSize: 13),
+                ),
+              ),
+            if (suggestion != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Row(
+                  children: [
+                    const Icon(Icons.tips_and_updates_outlined,
+                        size: 16, color: AppTheme.primary),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        '${l10n.coachTryWeightReps(_formatWeight(suggestion.weight), widget.unit, suggestion.reps)} · ${_reasonLabel(l10n, suggestion.reason)}',
+                        style: const TextStyle(
+                            color: AppTheme.primary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             const SizedBox(height: 8),
@@ -340,9 +374,11 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                         labelText: l10n.weight,
                         isDense: true,
                         border: const OutlineInputBorder(),
-                        hintText: lastSet != null
-                            ? _formatWeight(lastSet.weight)
-                            : null,
+                        hintText: suggestion != null
+                            ? _formatWeight(suggestion.weight)
+                            : lastSet != null
+                                ? _formatWeight(lastSet.weight)
+                                : null,
                       ),
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
@@ -356,7 +392,8 @@ class _ExerciseGroupCardState extends State<_ExerciseGroupCard> {
                         labelText: l10n.reps,
                         isDense: true,
                         border: const OutlineInputBorder(),
-                        hintText: lastSet?.reps.toString(),
+                        hintText: suggestion?.reps.toString() ??
+                            lastSet?.reps.toString(),
                       ),
                       keyboardType: TextInputType.number,
                     ),
