@@ -82,6 +82,9 @@ void main() {
     expect(cardio.exerciseId, seeded.runningId);
     expect(cardio.durationSeconds, 1800);
     expect(cardio.distanceMeters, 5000);
+    // Sync columns survive the round-trip so restored data can still sync.
+    expect(cardio.uuid, isNotNull);
+    expect(cardio.sessionUuid, sessions.single.uuid);
 
     final exercises = await workoutRepo.getExercises();
     expect(exercises.firstWhere((e) => e.name == 'Bench Press').id,
