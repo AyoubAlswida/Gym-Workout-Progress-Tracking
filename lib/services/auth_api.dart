@@ -17,3 +17,22 @@ abstract class AuthApi {
   Future<void> signInWithPassword(String email, String password);
   Future<void> signOut();
 }
+
+/// Permanently signed-out auth used when Supabase isn't configured, so the
+/// app runs fully offline with the account UI hidden.
+class OfflineAuthApi implements AuthApi {
+  @override
+  Stream<AuthUser?> get authState => const Stream.empty();
+
+  @override
+  AuthUser? get currentUser => null;
+
+  @override
+  Future<void> signUp(String email, String password) async {}
+
+  @override
+  Future<void> signInWithPassword(String email, String password) async {}
+
+  @override
+  Future<void> signOut() async {}
+}
