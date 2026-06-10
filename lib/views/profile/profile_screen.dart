@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../config/supabase_config.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/gen/app_localizations.dart';
 import '../../services/backup_file_service.dart';
@@ -10,6 +11,9 @@ import '../../viewmodels/profile_viewmodel.dart';
 import '../../viewmodels/routine_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 import '../../viewmodels/workout_viewmodel.dart';
+import '../../viewmodels/auth_viewmodel.dart';
+import '../../viewmodels/sync_viewmodel.dart';
+import '../auth/login_screen.dart';
 import '../exercises/exercise_library_screen.dart';
 import '../photos/progress_photos_screen.dart';
 
@@ -43,6 +47,10 @@ class ProfileScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 40),
+          if (SupabaseConfig.isConfigured) ...[
+            const _AccountCard(),
+            const SizedBox(height: 16),
+          ],
           Card(
             child: ListTile(
               title: Text(l10n.language),
@@ -393,6 +401,83 @@ class ProfileScreen extends StatelessWidget {
         );
       }
     }
+  }
+}
+
+/// Cloud account + sync controls. Only rendered when Supabase is configured.
+class _AccountCard extends StatelessWidget {
+  const _AccountCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final authVM = context.watch<AuthViewModel>();
+    final syncVM = context.watch<SyncViewModel>();
+
+    if (!authVM.isSignedIn) {
+      return Card(
+        child: ListTile(
+          leading: const Icon(Icons.cloud_outlined, color: AppTheme.primary),
+          title: Text(l10n.cloudSync),
+          subtitle: Text(l10n.signIn),
+          trailing: const Icon(Icons.chevron_right, size: 20),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          },
+        ),
+      );
+    }
+
+    final String syncStatus;
+    if (syncVM.isSyncing) {
+      syncStatus = l10n.syncing;
+    } else if (syncVM.lastError != null) {
+      syncStatus = l10n.syncError;
+    } else if (syncVM.lastSyncedAt != null) {
+      syncStatus = l10n.lastSynced(
+          DateFormat.yMMMd().add_jm().format(syncVM.lastSyncedAt!));
+    } else {
+      syncStatus = l10n.neverSynced;
+    }
+
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.cloud_done, color: AppTheme.primary),
+            title: Text(l10n.signedInAs(authVM.user!.email ?? '')),
+            subtitle: Text(syncStatus),
+          ),
+          const Divider(height: 1),
+          Row(
+            children: [
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: syncVM.isSyncing ? null : () => syncVM.syncNow(),
+                  icon: syncVM.isSyncing
+                      ? const SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.sync),
+                  label: Text(l10n.syncNow),
+                ),
+              ),
+              Expanded(
+                child: TextButton.icon(
+                  onPressed: () => context.read<AuthViewModel>().signOut(),
+                  icon: const Icon(Icons.logout),
+                  label: Text(l10n.signOut),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 

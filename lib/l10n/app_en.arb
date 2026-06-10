@@ -183,6 +183,34 @@
   "measurementLogged": "Measurement logged!",
   "invalidNumber": "Enter a valid number",
 
+  "account": "Account",
+  "cloudSync": "Cloud Sync",
+  "signIn": "Sign In",
+  "register": "Register",
+  "createAccount": "Create Account",
+  "signOut": "Sign Out",
+  "email": "Email",
+  "password": "Password",
+  "loginScreenTitle": "Sign in to sync",
+  "haveAccountSignIn": "Already have an account? Sign in",
+  "noAccountRegister": "No account? Create one",
+  "syncNow": "Sync now",
+  "syncing": "Syncing…",
+  "lastSynced": "Last synced: {time}",
+  "@lastSynced": {
+    "placeholders": {
+      "time": {"type": "String"}
+    }
+  },
+  "neverSynced": "Not synced yet",
+  "syncError": "Sync failed",
+  "signedInAs": "Signed in as {email}",
+  "@signedInAs": {
+    "placeholders": {
+      "email": {"type": "String"}
+    }
+  },
+
   "reminders": "Workout Reminders",
   "remindersEnabled": "Enable reminders",
   "reminderTime": "Reminder time",

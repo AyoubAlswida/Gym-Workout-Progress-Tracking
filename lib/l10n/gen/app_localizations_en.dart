@@ -331,6 +331,61 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidNumber => 'Enter a valid number';
 
   @override
+  String get account => 'Account';
+
+  @override
+  String get cloudSync => 'Cloud Sync';
+
+  @override
+  String get signIn => 'Sign In';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get createAccount => 'Create Account';
+
+  @override
+  String get signOut => 'Sign Out';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get loginScreenTitle => 'Sign in to sync';
+
+  @override
+  String get haveAccountSignIn => 'Already have an account? Sign in';
+
+  @override
+  String get noAccountRegister => 'No account? Create one';
+
+  @override
+  String get syncNow => 'Sync now';
+
+  @override
+  String get syncing => 'Syncing…';
+
+  @override
+  String lastSynced(String time) {
+    return 'Last synced: $time';
+  }
+
+  @override
+  String get neverSynced => 'Not synced yet';
+
+  @override
+  String get syncError => 'Sync failed';
+
+  @override
+  String signedInAs(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
   String get reminders => 'Workout Reminders';
 
   @override

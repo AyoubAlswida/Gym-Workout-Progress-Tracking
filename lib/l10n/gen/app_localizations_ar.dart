@@ -335,6 +335,61 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidNumber => 'أدخل رقماً صحيحاً';
 
   @override
+  String get account => 'الحساب';
+
+  @override
+  String get cloudSync => 'المزامنة السحابية';
+
+  @override
+  String get signIn => 'تسجيل الدخول';
+
+  @override
+  String get register => 'إنشاء حساب';
+
+  @override
+  String get createAccount => 'إنشاء حساب';
+
+  @override
+  String get signOut => 'تسجيل الخروج';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get password => 'كلمة المرور';
+
+  @override
+  String get loginScreenTitle => 'سجّل الدخول للمزامنة';
+
+  @override
+  String get haveAccountSignIn => 'لديك حساب؟ سجّل الدخول';
+
+  @override
+  String get noAccountRegister => 'لا حساب؟ أنشئ واحداً';
+
+  @override
+  String get syncNow => 'مزامنة الآن';
+
+  @override
+  String get syncing => 'جارٍ المزامنة…';
+
+  @override
+  String lastSynced(String time) {
+    return 'آخر مزامنة: $time';
+  }
+
+  @override
+  String get neverSynced => 'لم تتم المزامنة بعد';
+
+  @override
+  String get syncError => 'فشلت المزامنة';
+
+  @override
+  String signedInAs(String email) {
+    return 'مسجّل الدخول بـ $email';
+  }
+
+  @override
   String get reminders => 'تذكيرات التمرين';
 
   @override
