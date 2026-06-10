@@ -331,6 +331,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidNumber => 'Enter a valid number';
 
   @override
+  String get reminders => 'Workout Reminders';
+
+  @override
+  String get remindersEnabled => 'Enable reminders';
+
+  @override
+  String get reminderTime => 'Reminder time';
+
+  @override
+  String get reminderDays => 'Reminder days';
+
+  @override
+  String get reminderTitle => 'Time to train!';
+
+  @override
+  String get reminderBody => 'Your workout is waiting. Let\'s go!';
+
+  @override
   String get progressPhotos => 'Progress Photos';
 
   @override

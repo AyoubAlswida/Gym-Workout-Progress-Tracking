@@ -7,6 +7,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import 'core/theme/app_theme.dart';
 import 'l10n/gen/app_localizations.dart';
+import 'services/notification_service.dart';
 import 'viewmodels/analytics_viewmodel.dart';
 import 'viewmodels/exercise_viewmodel.dart';
 import 'viewmodels/photo_viewmodel.dart';
@@ -17,13 +18,15 @@ import 'viewmodels/settings_viewmodel.dart';
 import 'viewmodels/workout_viewmodel.dart';
 import 'views/main_navigation.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // sqflite has no native implementation on desktop; route through FFI.
   if (!kIsWeb && (Platform.isWindows || Platform.isLinux)) {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
   }
+  // No-op on unsupported platforms; safe to await unconditionally.
+  await NotificationService().init();
   runApp(const GymTrackerApp());
 }
 

@@ -5,6 +5,9 @@ class SettingsRepository {
   static const _keyRestTimerSeconds = 'restTimerSeconds';
   static const _keyLocaleCode = 'localeCode';
   static const _keyThemeMode = 'themeMode';
+  static const _keyRemindersEnabled = 'remindersEnabled';
+  static const _keyReminderDays = 'reminderDays';
+  static const _keyReminderTime = 'reminderTime';
 
   Future<bool> getIsMetric() async {
     final prefs = await SharedPreferences.getInstance();
@@ -45,5 +48,37 @@ class SettingsRepository {
   Future<void> setThemeMode(String value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyThemeMode, value);
+  }
+
+  Future<bool> getRemindersEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyRemindersEnabled) ?? false;
+  }
+
+  Future<void> setRemindersEnabled(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyRemindersEnabled, value);
+  }
+
+  /// ISO weekday numbers (1=Mon..7=Sun) as a comma-separated string.
+  Future<String> getReminderDays() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyReminderDays) ?? '1,3,5';
+  }
+
+  Future<void> setReminderDays(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyReminderDays, value);
+  }
+
+  /// Time of day as 'HH:mm' (24-hour).
+  Future<String> getReminderTime() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyReminderTime) ?? '18:00';
+  }
+
+  Future<void> setReminderTime(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyReminderTime, value);
   }
 }

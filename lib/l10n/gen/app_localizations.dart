@@ -650,6 +650,42 @@ abstract class AppLocalizations {
   /// **'Enter a valid number'**
   String get invalidNumber;
 
+  /// No description provided for @reminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Reminders'**
+  String get reminders;
+
+  /// No description provided for @remindersEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable reminders'**
+  String get remindersEnabled;
+
+  /// No description provided for @reminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder time'**
+  String get reminderTime;
+
+  /// No description provided for @reminderDays.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder days'**
+  String get reminderDays;
+
+  /// No description provided for @reminderTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to train!'**
+  String get reminderTitle;
+
+  /// No description provided for @reminderBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your workout is waiting. Let\'s go!'**
+  String get reminderBody;
+
   /// No description provided for @progressPhotos.
   ///
   /// In en, this message translates to:

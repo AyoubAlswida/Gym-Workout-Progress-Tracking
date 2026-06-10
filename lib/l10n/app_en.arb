@@ -183,6 +183,13 @@
   "measurementLogged": "Measurement logged!",
   "invalidNumber": "Enter a valid number",
 
+  "reminders": "Workout Reminders",
+  "remindersEnabled": "Enable reminders",
+  "reminderTime": "Reminder time",
+  "reminderDays": "Reminder days",
+  "reminderTitle": "Time to train!",
+  "reminderBody": "Your workout is waiting. Let's go!",
+
   "progressPhotos": "Progress Photos",
   "addPhoto": "Add Photo",
   "takePhoto": "Take Photo",

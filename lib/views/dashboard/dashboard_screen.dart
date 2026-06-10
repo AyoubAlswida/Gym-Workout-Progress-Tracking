@@ -29,11 +29,19 @@ class DashboardScreen extends StatelessWidget {
         title: Text(l10n.helloAthlete),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Scroll when the viewport is short; the Spacer still pins the
+            // start button to the bottom when there's room.
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
@@ -104,8 +112,13 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-            ],
-          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
     );

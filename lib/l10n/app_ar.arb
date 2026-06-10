@@ -100,6 +100,13 @@
   "measurementLogged": "تم تسجيل القياس!",
   "invalidNumber": "أدخل رقماً صحيحاً",
 
+  "reminders": "تذكيرات التمرين",
+  "remindersEnabled": "تفعيل التذكيرات",
+  "reminderTime": "وقت التذكير",
+  "reminderDays": "أيام التذكير",
+  "reminderTitle": "حان وقت التمرين!",
+  "reminderBody": "تمرينك بانتظارك. هيا بنا!",
+
   "progressPhotos": "صور التقدم",
   "addPhoto": "إضافة صورة",
   "takePhoto": "التقاط صورة",

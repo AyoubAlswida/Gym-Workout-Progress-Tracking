@@ -129,6 +129,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
           ),
+          if (settingsVM.remindersSupported) ...[
+            const SizedBox(height: 16),
+            _RemindersCard(),
+          ],
           const SizedBox(height: 16),
           Card(
             child: ListTile(
@@ -389,5 +393,94 @@ class ProfileScreen extends StatelessWidget {
         );
       }
     }
+  }
+}
+
+/// Weekly workout reminder controls. Only rendered on supported platforms
+/// (Android in this phase).
+class _RemindersCard extends StatelessWidget {
+  static const _weekdayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+  void _apply(BuildContext context,
+      {bool? enabled, Set<int>? days, TimeOfDay? time}) {
+    final l10n = AppLocalizations.of(context);
+    final vm = context.read<SettingsViewModel>();
+    vm.setReminders(
+      enabled: enabled ?? vm.remindersEnabled,
+      days: days ?? vm.reminderDays,
+      time: time ?? vm.reminderTime,
+      title: l10n.reminderTitle,
+      body: l10n.reminderBody,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final settingsVM = context.watch<SettingsViewModel>();
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(l10n.reminders,
+                      style: Theme.of(context).textTheme.bodyLarge),
+                ),
+                Switch(
+                  value: settingsVM.remindersEnabled,
+                  activeThumbColor: AppTheme.primary,
+                  onChanged: (val) => _apply(context, enabled: val),
+                ),
+              ],
+            ),
+            if (settingsVM.remindersEnabled) ...[
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                children: List.generate(7, (i) {
+                  final weekday = i + 1; // 1=Mon..7=Sun
+                  final selected =
+                      settingsVM.reminderDays.contains(weekday);
+                  return FilterChip(
+                    label: Text(_weekdayLabels[i]),
+                    selected: selected,
+                    selectedColor: AppTheme.primary.withValues(alpha: 0.3),
+                    onSelected: (_) {
+                      final days = Set<int>.from(settingsVM.reminderDays);
+                      selected ? days.remove(weekday) : days.add(weekday);
+                      _apply(context, days: days);
+                    },
+                  );
+                }),
+              ),
+              const SizedBox(height: 8),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.access_time),
+                title: Text(l10n.reminderTime),
+                trailing: Text(
+                  settingsVM.reminderTime.format(context),
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                onTap: () async {
+                  final picked = await showTimePicker(
+                    context: context,
+                    initialTime: settingsVM.reminderTime,
+                  );
+                  if (picked != null && context.mounted) {
+                    _apply(context, time: picked);
+                  }
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
   }
 }

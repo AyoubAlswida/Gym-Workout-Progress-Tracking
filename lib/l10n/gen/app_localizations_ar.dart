@@ -335,6 +335,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidNumber => 'أدخل رقماً صحيحاً';
 
   @override
+  String get reminders => 'تذكيرات التمرين';
+
+  @override
+  String get remindersEnabled => 'تفعيل التذكيرات';
+
+  @override
+  String get reminderTime => 'وقت التذكير';
+
+  @override
+  String get reminderDays => 'أيام التذكير';
+
+  @override
+  String get reminderTitle => 'حان وقت التمرين!';
+
+  @override
+  String get reminderBody => 'تمرينك بانتظارك. هيا بنا!';
+
+  @override
   String get progressPhotos => 'صور التقدم';
 
   @override
