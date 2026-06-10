@@ -331,6 +331,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidNumber => 'Enter a valid number';
 
   @override
+  String get progressPhotos => 'Progress Photos';
+
+  @override
+  String get addPhoto => 'Add Photo';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get chooseFile => 'Choose File';
+
+  @override
+  String get photoNoteHint => 'Note (optional)';
+
+  @override
+  String get deletePhoto => 'Delete Photo';
+
+  @override
+  String get deletePhotoConfirm => 'Delete this photo?';
+
+  @override
+  String get noPhotosYet => 'No progress photos yet. Tap + to add one.';
+
+  @override
   String get dataSection => 'Data';
 
   @override

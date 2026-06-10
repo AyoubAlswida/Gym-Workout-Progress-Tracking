@@ -11,6 +11,7 @@ import '../../viewmodels/routine_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
 import '../../viewmodels/workout_viewmodel.dart';
 import '../exercises/exercise_library_screen.dart';
+import '../photos/progress_photos_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -151,6 +152,22 @@ class ProfileScreen extends StatelessWidget {
               title: Text(l10n.logNewMeasurement),
               trailing: const Icon(Icons.chevron_right, size: 20),
               onTap: () => _showMeasurementDialog(context),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: ListTile(
+              leading:
+                  const Icon(Icons.photo_camera_outlined, color: AppTheme.primary),
+              title: Text(l10n.progressPhotos),
+              trailing: const Icon(Icons.chevron_right, size: 20),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ProgressPhotosScreen(),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 16),

@@ -650,6 +650,60 @@ abstract class AppLocalizations {
   /// **'Enter a valid number'**
   String get invalidNumber;
 
+  /// No description provided for @progressPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Photos'**
+  String get progressPhotos;
+
+  /// No description provided for @addPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get addPhoto;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @chooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose File'**
+  String get chooseFile;
+
+  /// No description provided for @photoNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get photoNoteHint;
+
+  /// No description provided for @deletePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Photo'**
+  String get deletePhoto;
+
+  /// No description provided for @deletePhotoConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this photo?'**
+  String get deletePhotoConfirm;
+
+  /// No description provided for @noPhotosYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No progress photos yet. Tap + to add one.'**
+  String get noPhotosYet;
+
   /// No description provided for @dataSection.
   ///
   /// In en, this message translates to:

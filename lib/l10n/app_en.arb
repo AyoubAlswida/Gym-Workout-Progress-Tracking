@@ -183,6 +183,16 @@
   "measurementLogged": "Measurement logged!",
   "invalidNumber": "Enter a valid number",
 
+  "progressPhotos": "Progress Photos",
+  "addPhoto": "Add Photo",
+  "takePhoto": "Take Photo",
+  "chooseFromGallery": "Choose from Gallery",
+  "chooseFile": "Choose File",
+  "photoNoteHint": "Note (optional)",
+  "deletePhoto": "Delete Photo",
+  "deletePhotoConfirm": "Delete this photo?",
+  "noPhotosYet": "No progress photos yet. Tap + to add one.",
+
   "dataSection": "Data",
   "exportCsv": "Export workout history (CSV)",
   "exportJson": "Export full backup (JSON)",

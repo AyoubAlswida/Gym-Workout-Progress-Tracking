@@ -9,6 +9,7 @@ import 'core/theme/app_theme.dart';
 import 'l10n/gen/app_localizations.dart';
 import 'viewmodels/analytics_viewmodel.dart';
 import 'viewmodels/exercise_viewmodel.dart';
+import 'viewmodels/photo_viewmodel.dart';
 import 'viewmodels/profile_viewmodel.dart';
 import 'viewmodels/routine_viewmodel.dart';
 import 'viewmodels/session_viewmodel.dart';
@@ -40,6 +41,7 @@ class GymTrackerApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ExerciseViewModel()..loadExercises()),
         ChangeNotifierProvider(create: (_) => RoutineViewModel()..loadRoutines()),
         ChangeNotifierProvider(create: (_) => AnalyticsViewModel()),
+        ChangeNotifierProvider(create: (_) => PhotoViewModel()),
       ],
       child: Consumer<SettingsViewModel>(
         builder: (context, settings, _) {

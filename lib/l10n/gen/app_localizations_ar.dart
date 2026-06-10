@@ -335,6 +335,33 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidNumber => 'أدخل رقماً صحيحاً';
 
   @override
+  String get progressPhotos => 'صور التقدم';
+
+  @override
+  String get addPhoto => 'إضافة صورة';
+
+  @override
+  String get takePhoto => 'التقاط صورة';
+
+  @override
+  String get chooseFromGallery => 'اختيار من المعرض';
+
+  @override
+  String get chooseFile => 'اختيار ملف';
+
+  @override
+  String get photoNoteHint => 'ملاحظة (اختياري)';
+
+  @override
+  String get deletePhoto => 'حذف الصورة';
+
+  @override
+  String get deletePhotoConfirm => 'حذف هذه الصورة؟';
+
+  @override
+  String get noPhotosYet => 'لا توجد صور تقدم بعد. اضغط + لإضافة واحدة.';
+
+  @override
   String get dataSection => 'البيانات';
 
   @override

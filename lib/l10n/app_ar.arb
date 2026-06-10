@@ -100,6 +100,16 @@
   "measurementLogged": "تم تسجيل القياس!",
   "invalidNumber": "أدخل رقماً صحيحاً",
 
+  "progressPhotos": "صور التقدم",
+  "addPhoto": "إضافة صورة",
+  "takePhoto": "التقاط صورة",
+  "chooseFromGallery": "اختيار من المعرض",
+  "chooseFile": "اختيار ملف",
+  "photoNoteHint": "ملاحظة (اختياري)",
+  "deletePhoto": "حذف الصورة",
+  "deletePhotoConfirm": "حذف هذه الصورة؟",
+  "noPhotosYet": "لا توجد صور تقدم بعد. اضغط + لإضافة واحدة.",
+
   "dataSection": "البيانات",
   "exportCsv": "تصدير سجل التمارين (CSV)",
   "exportJson": "تصدير نسخة احتياطية كاملة (JSON)",
