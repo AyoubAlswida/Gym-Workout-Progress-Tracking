@@ -183,6 +183,18 @@
   "measurementLogged": "Measurement logged!",
   "invalidNumber": "Enter a valid number",
 
+  "dataSection": "Data",
+  "exportCsv": "Export workout history (CSV)",
+  "exportJson": "Export full backup (JSON)",
+  "restoreBackup": "Restore from backup",
+  "restoreWarningTitle": "Replace all data?",
+  "restoreWarningBody": "Restoring a backup deletes ALL current data and replaces it with the backup contents. Progress photo files are not included in backups. This cannot be undone.",
+  "restore": "Restore",
+  "exportSuccess": "Exported successfully",
+  "restoreSuccess": "Backup restored",
+  "importInvalidFile": "This file is not a valid backup",
+  "importNewerVersion": "This backup was made by a newer app version",
+
   "save": "Save",
   "cancel": "Cancel",
   "delete": "Delete",

@@ -335,6 +335,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalidNumber => 'أدخل رقماً صحيحاً';
 
   @override
+  String get dataSection => 'البيانات';
+
+  @override
+  String get exportCsv => 'تصدير سجل التمارين (CSV)';
+
+  @override
+  String get exportJson => 'تصدير نسخة احتياطية كاملة (JSON)';
+
+  @override
+  String get restoreBackup => 'استعادة من نسخة احتياطية';
+
+  @override
+  String get restoreWarningTitle => 'استبدال كل البيانات؟';
+
+  @override
+  String get restoreWarningBody =>
+      'الاستعادة تحذف كل البيانات الحالية وتستبدلها بمحتوى النسخة الاحتياطية. ملفات صور التقدم غير مضمّنة في النسخ الاحتياطية. لا يمكن التراجع عن هذا.';
+
+  @override
+  String get restore => 'استعادة';
+
+  @override
+  String get exportSuccess => 'تم التصدير بنجاح';
+
+  @override
+  String get restoreSuccess => 'تمت استعادة النسخة الاحتياطية';
+
+  @override
+  String get importInvalidFile => 'هذا الملف ليس نسخة احتياطية صالحة';
+
+  @override
+  String get importNewerVersion => 'هذه النسخة أُنشئت بإصدار أحدث من التطبيق';
+
+  @override
   String get save => 'حفظ';
 
   @override

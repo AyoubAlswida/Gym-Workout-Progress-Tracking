@@ -650,6 +650,72 @@ abstract class AppLocalizations {
   /// **'Enter a valid number'**
   String get invalidNumber;
 
+  /// No description provided for @dataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get dataSection;
+
+  /// No description provided for @exportCsv.
+  ///
+  /// In en, this message translates to:
+  /// **'Export workout history (CSV)'**
+  String get exportCsv;
+
+  /// No description provided for @exportJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Export full backup (JSON)'**
+  String get exportJson;
+
+  /// No description provided for @restoreBackup.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore from backup'**
+  String get restoreBackup;
+
+  /// No description provided for @restoreWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace all data?'**
+  String get restoreWarningTitle;
+
+  /// No description provided for @restoreWarningBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Restoring a backup deletes ALL current data and replaces it with the backup contents. Progress photo files are not included in backups. This cannot be undone.'**
+  String get restoreWarningBody;
+
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// No description provided for @exportSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Exported successfully'**
+  String get exportSuccess;
+
+  /// No description provided for @restoreSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup restored'**
+  String get restoreSuccess;
+
+  /// No description provided for @importInvalidFile.
+  ///
+  /// In en, this message translates to:
+  /// **'This file is not a valid backup'**
+  String get importInvalidFile;
+
+  /// No description provided for @importNewerVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'This backup was made by a newer app version'**
+  String get importNewerVersion;
+
   /// No description provided for @save.
   ///
   /// In en, this message translates to:

@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/gen/app_localizations.dart';
+import '../../services/backup_file_service.dart';
+import '../../services/backup_service.dart';
+import '../../viewmodels/exercise_viewmodel.dart';
 import '../../viewmodels/profile_viewmodel.dart';
+import '../../viewmodels/routine_viewmodel.dart';
 import '../../viewmodels/settings_viewmodel.dart';
+import '../../viewmodels/workout_viewmodel.dart';
 import '../exercises/exercise_library_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -147,9 +153,109 @@ class ProfileScreen extends StatelessWidget {
               onTap: () => _showMeasurementDialog(context),
             ),
           ),
+          const SizedBox(height: 16),
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading:
+                      const Icon(Icons.table_chart, color: AppTheme.primary),
+                  title: Text(l10n.exportCsv),
+                  onTap: () => _exportCsv(context),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading: const Icon(Icons.backup, color: AppTheme.primary),
+                  title: Text(l10n.exportJson),
+                  onTap: () => _exportJson(context),
+                ),
+                const Divider(height: 1),
+                ListTile(
+                  leading:
+                      const Icon(Icons.restore, color: AppTheme.primary),
+                  title: Text(l10n.restoreBackup),
+                  onTap: () => _restoreBackup(context),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  void _showSnack(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _exportCsv(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final csv = await BackupService().exportWorkoutCsv();
+    final date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final saved =
+        await BackupFileService().saveTextFile(csv, 'gym_workouts_$date.csv');
+    if (saved && context.mounted) _showSnack(context, l10n.exportSuccess);
+  }
+
+  Future<void> _exportJson(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+    final json = await BackupService().exportJsonBackup();
+    final date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    final saved =
+        await BackupFileService().saveTextFile(json, 'gym_backup_$date.json');
+    if (saved && context.mounted) _showSnack(context, l10n.exportSuccess);
+  }
+
+  Future<void> _restoreBackup(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.restoreWarningTitle),
+        content: Text(l10n.restoreWarningBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.restore),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final content = await BackupFileService()
+        .pickTextFile(allowedExtensions: ['json']);
+    if (content == null || !context.mounted) return;
+
+    try {
+      await BackupService().importJsonBackup(content);
+    } on BackupException catch (e) {
+      if (context.mounted) {
+        _showSnack(
+            context,
+            e.reason == 'newerVersion'
+                ? l10n.importNewerVersion
+                : l10n.importInvalidFile);
+      }
+      return;
+    }
+
+    if (!context.mounted) return;
+    // Every viewmodel caches DB state; refresh them all.
+    await context.read<WorkoutViewModel>().loadSessions();
+    if (!context.mounted) return;
+    await context.read<ExerciseViewModel>().loadExercises();
+    if (!context.mounted) return;
+    await context.read<RoutineViewModel>().loadRoutines();
+    if (!context.mounted) return;
+    await context.read<ProfileViewModel>().loadMeasurements();
+    if (context.mounted) _showSnack(context, l10n.restoreSuccess);
   }
 
   Future<void> _showMeasurementDialog(BuildContext context) async {

@@ -331,6 +331,41 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidNumber => 'Enter a valid number';
 
   @override
+  String get dataSection => 'Data';
+
+  @override
+  String get exportCsv => 'Export workout history (CSV)';
+
+  @override
+  String get exportJson => 'Export full backup (JSON)';
+
+  @override
+  String get restoreBackup => 'Restore from backup';
+
+  @override
+  String get restoreWarningTitle => 'Replace all data?';
+
+  @override
+  String get restoreWarningBody =>
+      'Restoring a backup deletes ALL current data and replaces it with the backup contents. Progress photo files are not included in backups. This cannot be undone.';
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String get exportSuccess => 'Exported successfully';
+
+  @override
+  String get restoreSuccess => 'Backup restored';
+
+  @override
+  String get importInvalidFile => 'This file is not a valid backup';
+
+  @override
+  String get importNewerVersion =>
+      'This backup was made by a newer app version';
+
+  @override
   String get save => 'Save';
 
   @override
