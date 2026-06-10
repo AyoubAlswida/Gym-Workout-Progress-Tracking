@@ -15,7 +15,7 @@ class BackupException implements Exception {
 /// Serializes the database to/from portable strings. File I/O lives in
 /// BackupFileService so this layer stays unit-testable.
 class BackupService {
-  static const int schemaVersion = 3;
+  static const int schemaVersion = 4;
 
   static const List<String> _tables = [
     'exercises',

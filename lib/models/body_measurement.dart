@@ -9,6 +9,11 @@ class BodyMeasurement {
   final double? arms;
   final double? hips;
   final double? thighs;
+  // Sync metadata
+  final String? uuid;
+  final String? updatedAt;
+  final bool isDirty;
+  final bool isDeleted;
 
   BodyMeasurement({
     this.id,
@@ -20,7 +25,43 @@ class BodyMeasurement {
     this.arms,
     this.hips,
     this.thighs,
+    this.uuid,
+    this.updatedAt,
+    this.isDirty = false,
+    this.isDeleted = false,
   });
+
+  BodyMeasurement copyWith({
+    int? id,
+    String? date,
+    double? bodyWeight,
+    double? bodyFatPercentage,
+    double? waist,
+    double? chest,
+    double? arms,
+    double? hips,
+    double? thighs,
+    String? uuid,
+    String? updatedAt,
+    bool? isDirty,
+    bool? isDeleted,
+  }) {
+    return BodyMeasurement(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      bodyWeight: bodyWeight ?? this.bodyWeight,
+      bodyFatPercentage: bodyFatPercentage ?? this.bodyFatPercentage,
+      waist: waist ?? this.waist,
+      chest: chest ?? this.chest,
+      arms: arms ?? this.arms,
+      hips: hips ?? this.hips,
+      thighs: thighs ?? this.thighs,
+      uuid: uuid ?? this.uuid,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isDirty: isDirty ?? this.isDirty,
+      isDeleted: isDeleted ?? this.isDeleted,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -33,6 +74,10 @@ class BodyMeasurement {
       'arms': arms,
       'hips': hips,
       'thighs': thighs,
+      'uuid': uuid,
+      'updatedAt': updatedAt,
+      'isDirty': isDirty ? 1 : 0,
+      'isDeleted': isDeleted ? 1 : 0,
     };
   }
 
@@ -47,6 +92,10 @@ class BodyMeasurement {
       arms: map['arms'],
       hips: map['hips'],
       thighs: map['thighs'],
+      uuid: map['uuid'],
+      updatedAt: map['updatedAt'],
+      isDirty: map['isDirty'] == 1,
+      isDeleted: map['isDeleted'] == 1,
     );
   }
 }

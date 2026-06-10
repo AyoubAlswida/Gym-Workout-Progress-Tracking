@@ -8,6 +8,13 @@ class WorkoutSet {
   // Cardio sets store duration/distance; strength sets leave them null.
   final int? durationSeconds;
   final double? distanceMeters;
+  // Sync metadata
+  final String? uuid;
+  final String? sessionUuid;
+  final String? exerciseUuid;
+  final String? updatedAt;
+  final bool isDirty;
+  final bool isDeleted;
 
   WorkoutSet({
     this.id,
@@ -18,6 +25,12 @@ class WorkoutSet {
     this.isCompleted = false,
     this.durationSeconds,
     this.distanceMeters,
+    this.uuid,
+    this.sessionUuid,
+    this.exerciseUuid,
+    this.updatedAt,
+    this.isDirty = false,
+    this.isDeleted = false,
   });
 
   WorkoutSet copyWith({
@@ -29,6 +42,12 @@ class WorkoutSet {
     bool? isCompleted,
     int? durationSeconds,
     double? distanceMeters,
+    String? uuid,
+    String? sessionUuid,
+    String? exerciseUuid,
+    String? updatedAt,
+    bool? isDirty,
+    bool? isDeleted,
   }) {
     return WorkoutSet(
       id: id ?? this.id,
@@ -39,6 +58,12 @@ class WorkoutSet {
       isCompleted: isCompleted ?? this.isCompleted,
       durationSeconds: durationSeconds ?? this.durationSeconds,
       distanceMeters: distanceMeters ?? this.distanceMeters,
+      uuid: uuid ?? this.uuid,
+      sessionUuid: sessionUuid ?? this.sessionUuid,
+      exerciseUuid: exerciseUuid ?? this.exerciseUuid,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isDirty: isDirty ?? this.isDirty,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 
@@ -52,6 +77,12 @@ class WorkoutSet {
       'isCompleted': isCompleted ? 1 : 0,
       'durationSeconds': durationSeconds,
       'distanceMeters': distanceMeters,
+      'uuid': uuid,
+      'sessionUuid': sessionUuid,
+      'exerciseUuid': exerciseUuid,
+      'updatedAt': updatedAt,
+      'isDirty': isDirty ? 1 : 0,
+      'isDeleted': isDeleted ? 1 : 0,
     };
   }
 
@@ -65,6 +96,12 @@ class WorkoutSet {
       isCompleted: map['isCompleted'] == 1,
       durationSeconds: map['durationSeconds'],
       distanceMeters: map['distanceMeters'],
+      uuid: map['uuid'],
+      sessionUuid: map['sessionUuid'],
+      exerciseUuid: map['exerciseUuid'],
+      updatedAt: map['updatedAt'],
+      isDirty: map['isDirty'] == 1,
+      isDeleted: map['isDeleted'] == 1,
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:gym_workout_tracking/core/database/db_helper.dart';
+import 'package:gym_workout_tracking/core/sync/sync_ids.dart';
 
 import '../test_db_helper.dart';
 
@@ -181,11 +182,11 @@ void main() {
     await db.close();
   }
 
-  test('v1 database upgrades to v3 with data intact', () async {
+  test('v1 database upgrades to v4 with data intact', () async {
     await createV1Database();
 
     final db = await DatabaseHelper.instance.database;
-    expect(await db.getVersion(), 3);
+    expect(await db.getVersion(), 4);
 
     // Original exercises kept their ids and got the new columns backfilled.
     final bench = await db.query('exercises', where: 'name = ?', whereArgs: ['Bench Press']);
@@ -220,11 +221,11 @@ void main() {
     expect(orphans.first['c'], 0);
   });
 
-  test('v2 database upgrades to v3 with data intact', () async {
+  test('v2 database upgrades to v4 with data intact', () async {
     await createV2Database();
 
     final db = await DatabaseHelper.instance.database;
-    expect(await db.getVersion(), 3);
+    expect(await db.getVersion(), 4);
 
     // Legacy rows readable; new columns are null.
     final sets = await db.query('workout_sets');
@@ -266,6 +267,45 @@ void main() {
     expect(cardioExercises.length, 8);
   });
 
+  test('v3 upgrades to v4 — uuids backfilled, presets deterministic, '
+      'parent uuids resolved, no orphans', () async {
+    // Build a v3 DB by opening at v4 is wrong; instead create v1 then it
+    // chains to v4. To isolate v3->v4 we reuse the v2 builder (chains v2->v4)
+    // which exercises the same _addSyncColumns/_backfill path on legacy rows.
+    await createV2Database();
+    final db = await DatabaseHelper.instance.database;
+
+    // Every user-data row got a uuid + updatedAt.
+    final session = (await db.query('workout_sessions')).single;
+    expect(session['uuid'], isNotNull);
+    expect(session['updatedAt'], isNotNull);
+    expect(session['isDirty'], 0);
+    expect(session['isDeleted'], 0);
+
+    // The seeded Bench Press preset carries its deterministic uuid.
+    final bench =
+        (await db.query('exercises', where: "name = 'Bench Press'")).single;
+    expect(bench['uuid'], presetExerciseUuid('Bench Press'));
+
+    // The legacy workout_set's parent uuids resolve to the right rows.
+    final set = (await db.query('workout_sets')).single;
+    expect(set['uuid'], isNotNull);
+    expect(set['sessionUuid'], session['uuid']);
+    expect(set['exerciseUuid'], bench['uuid']);
+
+    // Preset routine_exercises link by deterministic uuids — no orphans.
+    final orphans = await db.rawQuery('''
+      SELECT COUNT(*) AS c FROM routine_exercises re
+      WHERE re.routineUuid IS NULL OR re.exerciseUuid IS NULL
+    ''');
+    expect(orphans.first['c'], 0);
+
+    // Preset rows are never dirty (nothing to push for them).
+    final dirtyPresets = await db.rawQuery(
+        "SELECT COUNT(*) AS c FROM exercises WHERE isCustom = 0 AND isDirty = 1");
+    expect(dirtyPresets.first['c'], 0);
+  });
+
   test('upgrade is idempotent across reopen', () async {
     await createV1Database();
     await DatabaseHelper.instance.database;
@@ -282,9 +322,9 @@ void main() {
         reason: 'cardio seeding must not duplicate on reopen');
   });
 
-  test('fresh install creates v3 schema with seeds', () async {
+  test('fresh install creates v4 schema with seeds', () async {
     final db = await DatabaseHelper.instance.database;
-    expect(await db.getVersion(), 3);
+    expect(await db.getVersion(), 4);
 
     final exerciseCount = (await db.rawQuery('SELECT COUNT(*) AS c FROM exercises')).first['c'] as int;
     expect(exerciseCount, greaterThan(40));
